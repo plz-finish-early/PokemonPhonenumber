@@ -45,7 +45,7 @@ class ContactsListViewController: UIViewController {
     }
     
     @objc private func showContactsDetailView() {
-        print("showContactsDetailView Button Tapped")
+        navigationController?.pushViewController(ContactsDetailViewController(), animated: false)
     }
 }
 
