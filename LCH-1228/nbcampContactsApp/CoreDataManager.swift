@@ -59,7 +59,7 @@ class CoreDataManager {
         }
     }
     
-    func getAllData() -> [(String, String, Data)] {
+    func getAllData() -> [(name: String, phoneNumber: String, profileImage: Data)] {
         guard let container = self.container else { return [] }
         var data: [(String, String, Data)] = []
         do {

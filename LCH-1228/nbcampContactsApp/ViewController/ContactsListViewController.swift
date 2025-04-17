@@ -69,11 +69,12 @@ extension ContactsListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ContactsListCell.identifier, for: indexPath) as? ContactsListCell else {
             return UITableViewCell()
         }
-        let data = CoreDataManager.shard.getAllData()
-        
-        cell.nameLabel.text = data[indexPath.row].0
-        cell.numberLabel.text = data[indexPath.row].1
-        cell.profileImage.image = UIImage(data: data[indexPath.row].2)
+        let data = CoreDataManager.shard.getAllData().sorted{
+            $0.name < $1.name
+        }
+        cell.nameLabel.text = data[indexPath.row].name
+        cell.numberLabel.text = data[indexPath.row].phoneNumber
+        cell.profileImage.image = UIImage(data: data[indexPath.row].profileImage)
         
         return cell
     }
