@@ -6,6 +6,7 @@
 //
 import UIKit
 import SnapKit
+import CoreData
 
 class ContactsDetailViewController: UIViewController {
     
@@ -47,6 +48,7 @@ class ContactsDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad[ContactsDetail]")
+        
         configureUI()
         configureNav()
     }
@@ -90,7 +92,7 @@ class ContactsDetailViewController: UIViewController {
     
     private func configureNav() {
         navigationItem.title = "포켓몬 추가"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "적용",
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "저장",
                                                             style: .plain,
                                                             target: self,
                                                             action: #selector(editButtonTapped))
@@ -151,6 +153,23 @@ class ContactsDetailViewController: UIViewController {
     
     @objc private func editButtonTapped() {
         print("editButtonTapped")
+        
+        guard let name = nameTextField.text, nameTextField.text != nil else {
+            print("이름 비어서 저장 못함")
+            return
+        }
+        guard let number = numberTextField.text, numberTextField.text != nil else {
+            print("번호 비어서 저장 못함")
+            return
+        }
+        
+        guard let profileImageData = profileImage.image!.pngData() else {
+            print("이미지 변환실패")
+            return
+        }
+        CoreDataManager.shard.createData(name: name, phoneNumber: number, profileImage: profileImageData)
+        
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func randomButtonTapped() {

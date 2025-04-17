@@ -8,10 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		9B02AEC12DAF2A4D006F8802 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9B02AEC02DAF2A4D006F8802 /* SnapKit */; };
+		9B9EAD942DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9EAD932DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift */; };
+		9B9EAD952DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9EAD922DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9B818C6E2DAF29D100BDF9AC /* nbcampContactsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nbcampContactsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B9EAD922DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataClass.swift"; sourceTree = "<group>"; };
+		9B9EAD932DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,6 +54,8 @@
 		9B818C652DAF29D000BDF9AC = {
 			isa = PBXGroup;
 			children = (
+				9B9EAD922DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift */,
+				9B9EAD932DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift */,
 				9B818C702DAF29D100BDF9AC /* nbcampContactsApp */,
 				9B818C6F2DAF29D100BDF9AC /* Products */,
 			);
@@ -141,6 +147,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B9EAD942DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift in Sources */,
+				9B9EAD952DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

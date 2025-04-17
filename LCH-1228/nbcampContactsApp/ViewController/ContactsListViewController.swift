@@ -25,6 +25,10 @@ class ContactsListViewController: UIViewController {
         configureNav()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        contactList.reloadData()
+    }
+    
     private func configureUI() {
         [
             contactList,
@@ -57,13 +61,20 @@ extension ContactsListViewController: UITableViewDelegate {
 
 extension ContactsListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        let data = CoreDataManager.shard.getAllData()
+        return data.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ContactsListCell.identifier, for: indexPath) as? ContactsListCell else {
             return UITableViewCell()
         }
+        let data = CoreDataManager.shard.getAllData()
+        
+        cell.nameLabel.text = data[indexPath.row].0
+        cell.numberLabel.text = data[indexPath.row].1
+        cell.profileImage.image = UIImage(data: data[indexPath.row].2)
+        
         return cell
     }
 }

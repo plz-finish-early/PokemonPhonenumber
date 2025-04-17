@@ -23,7 +23,6 @@ class ContactsListCell: UITableViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "이름"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16)
         return label
@@ -31,7 +30,6 @@ class ContactsListCell: UITableViewCell {
     
     let numberLabel: UILabel = {
         let label = UILabel()
-        label.text = "010-0000-0000"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16)
         return label
