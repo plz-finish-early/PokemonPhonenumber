@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         button.setTitleColor(.gray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20)
         button.titleLabel?.textAlignment = .center
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        //button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -33,26 +33,32 @@ class ViewController: UIViewController {
         tableView.backgroundColor = .white
         tableView.dataSource = self
         tableView.delegate = self
-        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(PhoneBookTableViewCell.self, forCellReuseIdentifier: PhoneBookTableViewCell.id)
         return tableView
     }()
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // 네비게이션 바 숨기기
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        
         setTitleLabel()
         setAddButton()
         setTableView()
     }
     
+    // MARK: - UI 설정
     private func setTitleLabel() {
         view.addSubview(titleLabel)
         
         titleLabel.snp.makeConstraints {
             $0.width.equalTo(80)
-            //$0.top.equalTo(view.safeAreaLayoutGuide)
             $0.top.equalToSuperview().offset(80)
             $0.centerX.equalToSuperview()
         }
@@ -60,6 +66,8 @@ class ViewController: UIViewController {
     
     private func setAddButton() {
         view.addSubview(addButton)
+        
+        addButton.addTarget(self, action: #selector(buttonTapped), for: .touchDown)
         
         addButton.snp.makeConstraints {
             $0.width.equalTo(80)
@@ -80,12 +88,14 @@ class ViewController: UIViewController {
         }
     }
     
+    // MARK: - 버튼 이벤트
     @objc
     private func buttonTapped() {
         self.navigationController?.pushViewController(PhoneBookViewController(), animated: true)
     }
 }
 
+// MARK: - 테이블 뷰 델리게이트 설정
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        return 5
