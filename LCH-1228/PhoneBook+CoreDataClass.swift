@@ -16,5 +16,6 @@ public class PhoneBook: NSManagedObject {
         static let name = "name"
         static let phoneNumber = "phoneNumber"
         static let profileImage = "profileImage"
+        static let uuid = "uuid"
     }
 }

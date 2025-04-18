@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class ContactsListViewController: UIViewController {
-    
+        
     private lazy var contactList: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -86,6 +86,7 @@ extension ContactsListViewController: UITableViewDataSource {
         }
         let contactsDetailViewController = ContactsDetailViewController()
         
+        contactsDetailViewController.currentUUID = data[indexPath.row].uuid.uuidString
         contactsDetailViewController.nameTextField.text = data[indexPath.row].name
         contactsDetailViewController.numberTextField.text = data[indexPath.row].phoneNumber
         contactsDetailViewController.profileImage.image = UIImage(data: data[indexPath.row].profileImage)

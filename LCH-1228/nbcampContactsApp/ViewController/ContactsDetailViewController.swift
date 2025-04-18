@@ -45,6 +45,8 @@ class ContactsDetailViewController: UIViewController {
         return textField
     }()
     
+    var currentUUID = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad[ContactsDetail]")
@@ -186,8 +188,8 @@ class ContactsDetailViewController: UIViewController {
     @objc func editButtonTapped() {
         print("editButtonTapped")
         
-        guard let title = navigationItem.title else {
-            print("타이틀 추출 실패")
+        guard let uuid = UUID(uuidString: currentUUID) else {
+            print("UUID 변환 실패")
             return
         }
         
@@ -205,7 +207,7 @@ class ContactsDetailViewController: UIViewController {
             return
         }
         
-        CoreDataManager.shard.updateData(currentName: title, updateName: name, updatephoneNumber: number, updateProfileImage: profileImageData)
+        CoreDataManager.shard.updateData(uuid: uuid, updateName: name, updatephoneNumber: number, updateProfileImage: profileImageData)
         
         navigationController?.popViewController(animated: true)
     }
