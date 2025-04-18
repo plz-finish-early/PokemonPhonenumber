@@ -24,6 +24,7 @@ class ViewController: UIViewController {
         button.setTitleColor(.gray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20)
         button.titleLabel?.textAlignment = .center
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -78,6 +79,11 @@ class ViewController: UIViewController {
             $0.bottom.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
         }
+    }
+    
+    @objc
+    private func buttonTapped() {
+        self.navigationController?.pushViewController(PhoneBookViewController(), animated: true)
     }
 }
 
