@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 
 class ContactsListViewController: UIViewController {
+    
+    var data: [(uuid: UUID, name: String, phoneNumber: String, profileImage: Data)] = []
         
     private lazy var contactList: UITableView = {
         let tableView = UITableView()
@@ -27,6 +29,9 @@ class ContactsListViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        data = CoreDataManager.shard.getAllData().sorted{
+            $0.name < $1.name
+        }
         contactList.reloadData()
     }
     
@@ -62,7 +67,6 @@ extension ContactsListViewController: UITableViewDelegate {
 
 extension ContactsListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let data = CoreDataManager.shard.getAllData()
         return data.count
     }
     
@@ -70,9 +74,7 @@ extension ContactsListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ContactsListCell.identifier, for: indexPath) as? ContactsListCell else {
             return UITableViewCell()
         }
-        let data = CoreDataManager.shard.getAllData().sorted{
-            $0.name < $1.name
-        }
+        
         cell.nameLabel.text = data[indexPath.row].name
         cell.numberLabel.text = data[indexPath.row].phoneNumber
         cell.profileImage.image = UIImage(data: data[indexPath.row].profileImage)
@@ -81,9 +83,6 @@ extension ContactsListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let data = CoreDataManager.shard.getAllData().sorted{
-            $0.name < $1.name
-        }
         let contactsDetailViewController = ContactsDetailViewController()
         
         contactsDetailViewController.currentUUID = data[indexPath.row].uuid.uuidString
