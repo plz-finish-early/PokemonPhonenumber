@@ -16,6 +16,7 @@ class ContactsDetailViewController: UIViewController {
         imageView.layer.cornerRadius = 75
         imageView.layer.borderColor = .init(red: 128/255, green: 128/255, blue: 128/255, alpha: 0.8)
         imageView.layer.borderWidth = 2
+        imageView.clipsToBounds = true
         return imageView
     }()
     
