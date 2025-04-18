@@ -37,7 +37,7 @@
 		ED51AA732DB1E3950025D39E /* Exceptions for "PokemonPhoneBook" folder in "PokemonPhoneBook" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = ED51AA472DB1E3930025D39E /* PokemonPhoneBook */;
 		};
