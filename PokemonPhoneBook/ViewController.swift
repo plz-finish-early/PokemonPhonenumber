@@ -65,7 +65,6 @@ class ViewController: UIViewController {
             $0.width.equalTo(80)
             $0.height.equalTo(titleLabel.snp.height)
             $0.top.equalToSuperview().offset(80)
-            //$0.centerY.equalTo(tableView.snp.centerY)
             $0.trailing.equalToSuperview()
             
         }

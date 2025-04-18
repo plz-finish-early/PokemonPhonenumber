@@ -47,6 +47,7 @@ class PhoneBookViewController: UIViewController {
 
         self.view.backgroundColor = .white
         self.navigationItem.title = "연락처 추가"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "적용", style: .done, target: self, action: #selector(Tapped))
         
         setProfileImageView()
         setRamdomImageGenerationButton()
@@ -94,4 +95,9 @@ class PhoneBookViewController: UIViewController {
             $0.centerX.equalToSuperview()
         }
     }
+    
+    @objc
+      private func Tapped() {
+        print("적용 버튼이 탭 되었습니다.")
+      }
 }
