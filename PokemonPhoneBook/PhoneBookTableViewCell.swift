@@ -10,7 +10,7 @@ import UIKit
 class PhoneBookTableViewCell: UITableViewCell {
     static let id = "PhoneBookTableViewCell"
     
-    let pokemonImageView: UIImageView = {
+    private let pokemonImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .white
@@ -20,7 +20,7 @@ class PhoneBookTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    let nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "name"
         label.font = .systemFont(ofSize: 18)
@@ -29,7 +29,7 @@ class PhoneBookTableViewCell: UITableViewCell {
         return label
     }()
     
-    let phoneNumLabel: UILabel = {
+    private let phoneNumLabel: UILabel = {
         let label = UILabel()
         label.text = "010-1111-2222"
         label.font = .systemFont(ofSize: 18)
@@ -40,36 +40,41 @@ class PhoneBookTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureUI()
+        
+        setPokemonImageView()
+        setNameLabel()
+        setPhoneNumLabel()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureUI() {
-        [
-            pokemonImageView,
-            nameLabel,
-            phoneNumLabel
-        ].forEach { contentView.addSubview($0) }
+    private func setPokemonImageView() {
+        contentView.addSubview(pokemonImageView)
         
         pokemonImageView.snp.makeConstraints {
             $0.width.height.equalTo(60)
             $0.leading.equalToSuperview().offset(30)
             $0.centerY.equalToSuperview()
         }
+    }
+    
+    private func setNameLabel() {
+        contentView.addSubview(nameLabel)
         
         nameLabel.snp.makeConstraints {
             $0.leading.equalTo(pokemonImageView.snp.trailing).offset(20)
             $0.centerY.equalToSuperview()
         }
-       
+    }
+    
+    private func setPhoneNumLabel() {
+        contentView.addSubview(phoneNumLabel)
+        
         phoneNumLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(30)
-            //$0.leading.equalTo(nameLabel.snp.trailing).offset(50)
         }
     }
-    
 }
