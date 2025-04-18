@@ -6,7 +6,6 @@
 //
 import UIKit
 import SnapKit
-import CoreData
 
 class ContactsDetailViewController: UIViewController {
     
@@ -48,9 +47,12 @@ class ContactsDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad[ContactsDetail]")
-        
         configureUI()
-        configureNav()
+        configureAddNav()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        configureAddNav()
     }
     
     private func configureUI() {
@@ -90,9 +92,17 @@ class ContactsDetailViewController: UIViewController {
         }
     }
     
-    private func configureNav() {
+    func configureAddNav() {
         navigationItem.title = "포켓몬 추가"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "저장",
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(addButtonTapped))
+    }
+    
+    func configureEditNav(title: String, buttonName: String) {
+        navigationItem.title = title
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: buttonName,
                                                             style: .plain,
                                                             target: self,
                                                             action: #selector(editButtonTapped))
@@ -151,8 +161,8 @@ class ContactsDetailViewController: UIViewController {
         }
     }
     
-    @objc private func editButtonTapped() {
-        print("editButtonTapped")
+    @objc private func addButtonTapped() {
+        print("addButtonTapped")
         
         guard let name = nameTextField.text, nameTextField.text != nil else {
             print("이름 비어서 저장 못함")
@@ -168,6 +178,33 @@ class ContactsDetailViewController: UIViewController {
             return
         }
         CoreDataManager.shard.createData(name: name, phoneNumber: number, profileImage: profileImageData)
+        
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func editButtonTapped() {
+        print("editButtonTapped")
+        
+        guard let title = navigationItem.title else {
+            print("타이틀 추출 실패")
+            return
+        }
+        
+        guard let name = nameTextField.text, nameTextField.text != nil else {
+            print("이름 비어서 저장 못함")
+            return
+        }
+        guard let number = numberTextField.text, numberTextField.text != nil else {
+            print("번호 비어서 저장 못함")
+            return
+        }
+        
+        guard let profileImageData = profileImage.image!.pngData() else {
+            print("이미지 변환실패")
+            return
+        }
+        
+        CoreDataManager.shard.updateData(currentName: title, updateName: name, updatephoneNumber: number, updateProfileImage: profileImageData)
         
         navigationController?.popViewController(animated: true)
     }

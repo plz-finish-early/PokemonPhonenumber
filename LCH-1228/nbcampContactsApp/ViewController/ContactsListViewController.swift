@@ -21,6 +21,7 @@ class ContactsListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("vewDidLoad[ViewController]")
+
         configureUI()
         configureNav()
     }
@@ -77,5 +78,23 @@ extension ContactsListViewController: UITableViewDataSource {
         cell.profileImage.image = UIImage(data: data[indexPath.row].profileImage)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let data = CoreDataManager.shard.getAllData().sorted{
+            $0.name < $1.name
+        }
+        let contactsDetailViewController = ContactsDetailViewController()
+        
+        contactsDetailViewController.nameTextField.text = data[indexPath.row].name
+        contactsDetailViewController.numberTextField.text = data[indexPath.row].phoneNumber
+        contactsDetailViewController.profileImage.image = UIImage(data: data[indexPath.row].profileImage)
+        
+        if !contactsDetailViewController.isViewLoaded {
+            contactsDetailViewController.loadViewIfNeeded()
+        }
+        contactsDetailViewController.configureEditNav(title: data[indexPath.row].name, buttonName: "수정")
+        
+        navigationController?.pushViewController(contactsDetailViewController, animated: false)
     }
 }

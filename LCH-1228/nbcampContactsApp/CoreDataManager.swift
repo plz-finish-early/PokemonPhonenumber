@@ -88,7 +88,7 @@ class CoreDataManager {
         }
     }
     
-    func updateData(currentName: String, updateName: String) {
+    func updateData(currentName: String, updateName: String, updatephoneNumber: String, updateProfileImage: Data) {
         guard let container = self.container else { return }
         let fetchRequest = PhoneBook.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "name == %@", currentName)
@@ -98,6 +98,8 @@ class CoreDataManager {
             
             for data in result as [NSManagedObject] {
                 data.setValue(updateName, forKey: PhoneBook.Key.name)
+                data.setValue(updatephoneNumber, forKey: PhoneBook.Key.phoneNumber)
+                data.setValue(updateProfileImage, forKey: PhoneBook.Key.profileImage)
             }
             
             try container.viewContext.save()
