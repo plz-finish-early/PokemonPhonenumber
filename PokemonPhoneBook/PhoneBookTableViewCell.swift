@@ -14,7 +14,7 @@ class PhoneBookTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .white
-        imageView.layer.borderColor = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+        imageView.layer.borderColor = UIColor.gray.cgColor
         imageView.layer.borderWidth = 1
         imageView.layer.cornerRadius = 30
         return imageView
@@ -48,9 +48,6 @@ class PhoneBookTableViewCell: UITableViewCell {
     }
     
     func configureUI() {
-        self.backgroundColor = .blue
-        contentView.backgroundColor = .green
-        
         [
             pokemonImageView,
             nameLabel,

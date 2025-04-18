@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.backgroundColor = .cyan
+        tableView.backgroundColor = .white
         tableView.dataSource = self
         tableView.delegate = self
         //tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
