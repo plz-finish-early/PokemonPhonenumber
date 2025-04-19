@@ -11,7 +11,12 @@ class ContactsDetailViewController: UIViewController {
     
     let profileImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "questionmark.circle")
+        let colorConfig = UIImage.SymbolConfiguration(hierarchicalColor: .blue)
+        if let image = UIImage(systemName: "questionmark.circle.fill", withConfiguration: colorConfig) {
+            imageView.image = image
+        } else {
+            imageView.image = UIImage(systemName: "questionmark.circle.fill")
+        }
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 75
         imageView.layer.borderColor = .init(red: 128/255, green: 128/255, blue: 128/255, alpha: 0.8)
@@ -23,7 +28,7 @@ class ContactsDetailViewController: UIViewController {
     private lazy var getImageButton: UIButton = {
         let button = UIButton()
         button.setTitle("랜덤 가챠 시작!!", for: .normal)
-        button.setTitleColor(.gray, for: .normal)
+        button.setTitleColor(.label, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12)
         button.addTarget(self, action: #selector(randomButtonTapped), for: .touchUpInside)
         return button
@@ -35,7 +40,7 @@ class ContactsDetailViewController: UIViewController {
             string: "이름을 입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray]
         )
-        textField.textColor = .black
+        textField.textColor = .label
         textField.borderStyle = .roundedRect
         return textField
     }()
@@ -46,7 +51,7 @@ class ContactsDetailViewController: UIViewController {
             string: "전화번호를 입력하세요",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray]
         )
-        textField.textColor = .black
+        textField.textColor = .label
         textField.borderStyle = .roundedRect
         textField.keyboardType = .phonePad
         return textField
@@ -66,7 +71,7 @@ class ContactsDetailViewController: UIViewController {
     }
     
     private func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         [
             profileImage,
             getImageButton,

@@ -13,7 +13,6 @@ class ContactsListCell: UITableViewCell {
     
     let profileImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "questionmark.circle")
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 40
         imageView.layer.borderColor = .init(red: 128/255, green: 128/255, blue: 128/255, alpha: 0.8)
@@ -24,14 +23,14 @@ class ContactsListCell: UITableViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .label
         label.font = .systemFont(ofSize: 16)
         return label
     }()
     
     let numberLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = .label
         label.font = .systemFont(ofSize: 16)
         return label
     }()
