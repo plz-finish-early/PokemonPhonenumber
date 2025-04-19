@@ -31,7 +31,10 @@ class ContactsDetailViewController: UIViewController {
     
     let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "이름을 입력하세요"
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "이름을 입력하세요",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray]
+        )
         textField.textColor = .black
         textField.borderStyle = .roundedRect
         return textField
@@ -39,9 +42,13 @@ class ContactsDetailViewController: UIViewController {
     
     let numberTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "전화번호를 입력하세요"
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "전화번호를 입력하세요",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray]
+        )
         textField.textColor = .black
         textField.borderStyle = .roundedRect
+        textField.keyboardType = .phonePad
         return textField
     }()
     
