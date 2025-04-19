@@ -29,10 +29,7 @@ class ContactsListViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        data = CoreDataManager.shard.getAllData().sorted{
-            $0.name < $1.name
-        }
-        contactList.reloadData()
+        reloadData()
     }
     
     private func configureUI() {
@@ -54,6 +51,13 @@ class ContactsListViewController: UIViewController {
                                                             action: #selector(showContactsDetailView))
     }
     
+    private func reloadData() {
+        data = CoreDataManager.shard.getAllData().sorted{
+            $0.name < $1.name
+        }
+        contactList.reloadData()
+    }
+    
     @objc private func showContactsDetailView() {
         navigationController?.pushViewController(ContactsDetailViewController(), animated: false)
     }
@@ -63,8 +67,26 @@ extension ContactsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
-}
-
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "방생하기") { [weak self] (UIContextualAction, UIView, result: @escaping (Bool) -> Void) in
+            print("방생하기 실행됨")
+            
+            guard let self = self else {
+                result(false)
+                return
+            }
+            
+            let currentUUID = data[indexPath.row].uuid
+            CoreDataManager.shard.deleteData(uuid: currentUUID)
+            reloadData()
+            result(true)
+        }
+        print("방생하기 버튼 표시")
+        
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+    
 extension ContactsListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
