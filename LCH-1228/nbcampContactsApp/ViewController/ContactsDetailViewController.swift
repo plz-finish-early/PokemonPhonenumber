@@ -159,7 +159,7 @@ class ContactsDetailViewController: UIViewController {
                 return
             }
             
-            guard let imageUrl = URL(string: decodedData.sprites.other.home.frontDefault) else {
+            guard let imageUrl = URL(string: decodedData.sprites.other.officialArtwork.frontDefault) else {
                 print("이미지 url 생성 실패")
                 return
             }

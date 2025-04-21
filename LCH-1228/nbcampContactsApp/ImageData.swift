@@ -14,11 +14,14 @@ struct SpritesObject: Codable {
 }
 
 struct OtherObject: Codable {
-    let home: HomeObject
+    let officialArtwork: OfficialArtworkObject
+    
+    enum CodingKeys: String, CodingKey {
+        case officialArtwork = "official-artwork"
+    }
 }
 
-struct HomeObject: Codable {
-    
+struct OfficialArtworkObject: Codable {
     let frontDefault: String
     
     enum CodingKeys: String, CodingKey {
