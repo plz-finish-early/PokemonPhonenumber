@@ -36,6 +36,10 @@ class PhoneBookListCell: UITableViewCell {
         
         photoImageView.image = UIImage(systemName: "person.circle")
         photoImageView.frame.size = CGSize(width: 50, height: 50)
+        photoImageView.layer.borderColor = UIColor.gray.cgColor
+        photoImageView.layer.borderWidth = 1
+        photoImageView.layer.cornerRadius = 50 / 2
+        
         
         nameLabel.text = "Name"
         nameLabel.textColor = .black
