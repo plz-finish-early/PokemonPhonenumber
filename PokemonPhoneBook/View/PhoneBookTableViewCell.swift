@@ -77,4 +77,10 @@ class PhoneBookTableViewCell: UITableViewCell {
             $0.trailing.equalToSuperview().inset(30)
         }
     }
+    
+    public func configureCell(image: UIImage?, name: String, phoneNumber: String) {
+        pokemonImageView.image = image
+        nameLabel.text = name
+        phoneNumLabel.text = phoneNumber
+    }
 }

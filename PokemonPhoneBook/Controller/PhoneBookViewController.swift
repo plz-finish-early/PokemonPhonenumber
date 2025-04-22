@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 class PhoneBookViewController: UIViewController {
-    
+
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -107,7 +107,15 @@ class PhoneBookViewController: UIViewController {
     // MARK: - 버튼 이벤트
     @objc
       private func didApplyButtonTapped() {
-        print("적용 버튼이 탭 되었습니다.")
+          print("적용 버튼이 탭 되었습니다.")
+          
+          CoreDataManager.shared.createData(
+            image: profileImageView.image,
+            name: nameTextField.text ?? "",
+            phoneNumber: phoneNumTextField.text ?? "")
+          
+          self.navigationController?.popViewController(animated: true) // 전 화면으로 돌아가기
+          
       }
     
     @objc
@@ -169,5 +177,4 @@ class PhoneBookViewController: UIViewController {
             }
         }
     }
-    
 }
