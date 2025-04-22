@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class PhoneBookViewController: UIViewController {
     
@@ -53,7 +54,7 @@ class PhoneBookViewController: UIViewController {
 
         self.view.backgroundColor = .white
         self.navigationItem.title = "연락처 추가"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "적용", style: .done, target: self, action: #selector(Tapped))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "적용", style: .done, target: self, action: #selector(didApplyButtonTapped))
         
         setProfileImageView()
         setRamdomImageGenerationButton()
@@ -105,7 +106,7 @@ class PhoneBookViewController: UIViewController {
     
     // MARK: - 버튼 이벤트
     @objc
-      private func Tapped() {
+      private func didApplyButtonTapped() {
         print("적용 버튼이 탭 되었습니다.")
       }
     
@@ -168,4 +169,5 @@ class PhoneBookViewController: UIViewController {
             }
         }
     }
+    
 }
