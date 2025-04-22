@@ -6,6 +6,7 @@
 //
 import UIKit
 import SnapKit
+import Alamofire
 
 class ContactsDetailViewController: UIViewController {
     
@@ -158,27 +159,22 @@ private extension ContactsDetailViewController {
             return
         }
         
-        networkServices.fetchData(url: url) { [weak self] (result: Data?) in
-            guard let self, let result else { return }
-            
-            guard let decodedData = try? JSONDecoder().decode(ImageData.self, from: result) else {
-                print("JSON 디코딩 실패")
-                return
-            }
-            
-            guard let imageUrl = URL(string: decodedData.sprites.other.officialArtwork.frontDefault) else {
-                print("이미지 url 생성 실패")
-                return
-            }
-            
-            networkServices.fetchData(url: imageUrl) { [weak self] (result: Data?) in
-                guard let self, let result else { return }
+        networkServices.fetchData(url: url) { [weak self] (result: Result<ImageData, AFError>) in
+            switch result {
+            case .success(let result):
+                guard let imageURL = URL(string: result.sprites.other.officialArtwork.frontDefault) else {
+                    return
+                }
                 
-                if let image = UIImage(data: result) {
-                    DispatchQueue.main.async {
-                        self.profileImage.image = image
+                AF.request(imageURL).response { response in
+                    if let data = response.data, let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self?.profileImage.image = image
+                        }
                     }
                 }
+            case .failure(let error):
+                print(error)
             }
         }
     }
