@@ -15,6 +15,7 @@ class ViewController: UIViewController {
         setupView()
         configure()
         setupTableView()
+        addButton.addTarget(self, action: #selector(didTapAdd), for: .touchUpInside)
     }
 
     private func setupView() {
@@ -22,7 +23,7 @@ class ViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(mainLabel)
         view.addSubview(addButton)
-        view.bringSubviewToFront(addButton) // 버튼이 테이블 뷰에 안 가려지게!
+        view.bringSubviewToFront(addButton)
     }
 
     private func configure() {
@@ -70,6 +71,11 @@ class ViewController: UIViewController {
         addButton.setTitleColor(.black, for: .normal)
         return addButton
     }()
+    
+    @objc func didTapAdd() {
+        let vc = PhoneBookViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
