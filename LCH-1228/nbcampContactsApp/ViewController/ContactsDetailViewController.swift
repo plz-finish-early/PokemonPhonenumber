@@ -9,7 +9,7 @@ import SnapKit
 
 class ContactsDetailViewController: UIViewController {
     
-    private var data: [(uuid: UUID, name: String, phoneNumber: String, profileImage: Data)] = []
+    private var data: [Contact] = []
     
     var indexPath = IndexPath() {
         didSet {
@@ -186,7 +186,8 @@ class ContactsDetailViewController: UIViewController {
             print("이미지 변환실패")
             return
         }
-        CoreDataManager.shard.createData(name: name, phoneNumber: number, profileImage: profileImageData)
+        let newContact = Contact(uuid: UUID(), name: name, phoneNumber: number, profileImage: profileImageData)
+        CoreDataManager.shard.createData(contact: newContact)
         
         navigationController?.popViewController(animated: true)
     }
@@ -194,7 +195,7 @@ class ContactsDetailViewController: UIViewController {
     @objc private func editButtonTapped() {
         print("editButtonTapped")
 
-        let uuid = data[indexPath.row].uuid
+        let currentUUID = data[indexPath.row].uuid
         
         guard let name = nameTextField.text, nameTextField.text != nil else {
             print("이름 비어서 저장 못함")
@@ -209,8 +210,8 @@ class ContactsDetailViewController: UIViewController {
             print("이미지 변환실패")
             return
         }
-        
-        CoreDataManager.shard.updateData(uuid: uuid, updateName: name, updatephoneNumber: number, updateProfileImage: profileImageData)
+        let editedContact = Contact(uuid: currentUUID, name: name, phoneNumber: number, profileImage: profileImageData)
+        CoreDataManager.shard.updateData(contact: editedContact)
         
         navigationController?.popViewController(animated: true)
     }

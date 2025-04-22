@@ -13,7 +13,7 @@ class CoreDataManager {
     private let appDelegate = UIApplication.shared.delegate as? AppDelegate
     private lazy var container = appDelegate?.persistentContainer
     
-    func createData(name: String, phoneNumber: String, profileImage: Data) {
+    func createData(contact: Contact) {
         guard let container = self.container else { return }
         guard let entity = NSEntityDescription.entity(forEntityName: PhoneBook.entityName, in: container.viewContext) else {
             print("entity 생성 실패")
@@ -23,9 +23,9 @@ class CoreDataManager {
         let newPhoneBook = NSManagedObject(entity: entity, insertInto: container.viewContext)
         
         newPhoneBook.setValue(UUID(), forKey: PhoneBook.Key.uuid)
-        newPhoneBook.setValue(name, forKey: PhoneBook.Key.name)
-        newPhoneBook.setValue(phoneNumber, forKey: PhoneBook.Key.phoneNumber)
-        newPhoneBook.setValue(profileImage, forKey: PhoneBook.Key.profileImage)
+        newPhoneBook.setValue(contact.name, forKey: PhoneBook.Key.name)
+        newPhoneBook.setValue(contact.phoneNumber, forKey: PhoneBook.Key.phoneNumber)
+        newPhoneBook.setValue(contact.profileImage, forKey: PhoneBook.Key.profileImage)
         do {
             try container.viewContext.save()
             print("저장 성공")
@@ -64,9 +64,9 @@ class CoreDataManager {
         }
     }
     
-    func getAllData() -> [(uuid: UUID, name: String, phoneNumber: String, profileImage: Data)] {
+    func getAllData() -> [Contact] {
         guard let container = self.container else { return [] }
-        var data: [(UUID, String, String, Data)] = []
+        var allData: [Contact] = []
         do {
             let phoneBooks = try container.viewContext.fetch(PhoneBook.fetchRequest())
             for phoneBook in phoneBooks as [NSManagedObject] {
@@ -86,29 +86,30 @@ class CoreDataManager {
                     print("이미지 추출 실패")
                     return []
                 }
-                data.append((uuid, name, phoneNumber, profileImage))
+                let data = Contact(uuid: uuid, name: name, phoneNumber: phoneNumber, profileImage: profileImage)
+                allData.append(data)
             }
             print("데이터 추출 성공")
-            return data
+            return allData
         } catch {
             print("fetchRequest 실패")
             return []
         }
     }
     
-    func updateData(uuid: UUID, updateName: String, updatephoneNumber: String, updateProfileImage: Data) {
+    func updateData(contact: Contact) {
         guard let container = self.container else { return }
         let fetchRequest = PhoneBook.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "uuid == %@", uuid.uuidString)
+        fetchRequest.predicate = NSPredicate(format: "uuid == %@", contact.uuid.uuidString)
         
         do {
             let result = try container.viewContext.fetch(fetchRequest)
             
             for data in result as [NSManagedObject] {
                 data.setValue(UUID(), forKey: PhoneBook.Key.uuid)
-                data.setValue(updateName, forKey: PhoneBook.Key.name)
-                data.setValue(updatephoneNumber, forKey: PhoneBook.Key.phoneNumber)
-                data.setValue(updateProfileImage, forKey: PhoneBook.Key.profileImage)
+                data.setValue(contact.name, forKey: PhoneBook.Key.name)
+                data.setValue(contact.phoneNumber, forKey: PhoneBook.Key.phoneNumber)
+                data.setValue(contact.profileImage, forKey: PhoneBook.Key.profileImage)
             }
             
             try container.viewContext.save()
@@ -118,10 +119,10 @@ class CoreDataManager {
         }
     }
     
-    func deleteData(uuid: UUID) {
+    func deleteData(contact: Contact) {
         guard let container = self.container else { return }
         let fetchRequest = PhoneBook.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "uuid == %@", uuid.uuidString)
+        fetchRequest.predicate = NSPredicate(format: "uuid == %@", contact.uuid.uuidString)
         
         do {
             let result = try container.viewContext.fetch(fetchRequest)

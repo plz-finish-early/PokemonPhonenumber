@@ -10,7 +10,7 @@ import SnapKit
 
 class ContactsListViewController: UIViewController {
     
-    private var data: [(uuid: UUID, name: String, phoneNumber: String, profileImage: Data)] = []
+    private var data: [Contact] = []
         
     private lazy var contactList: UITableView = {
         let tableView = UITableView()
@@ -85,9 +85,8 @@ extension ContactsListViewController: UITableViewDelegate {
                 result(false)
                 return
             }
-            
-            let currentUUID = data[indexPath.row].uuid
-            CoreDataManager.shard.deleteData(uuid: currentUUID)
+            let targetContact = data[indexPath.row]
+            CoreDataManager.shard.deleteData(contact: targetContact)
             reloadData()
             result(true)
         }
