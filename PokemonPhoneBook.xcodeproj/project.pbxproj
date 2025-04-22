@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		ED6988152DB1E58F00AD50A5 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED6988142DB1E58F00AD50A5 /* SnapKit */; };
+		EDD5392C2DB7277B00429E64 /* PhoneBook+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD5392A2DB7277B00429E64 /* PhoneBook+CoreDataClass.swift */; };
+		EDD5392D2DB7277B00429E64 /* PhoneBook+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD5392B2DB7277B00429E64 /* PhoneBook+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,13 +33,15 @@
 		ED51AA482DB1E3930025D39E /* PokemonPhoneBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PokemonPhoneBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED51AA612DB1E3950025D39E /* PokemonPhoneBookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokemonPhoneBookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED51AA6B2DB1E3950025D39E /* PokemonPhoneBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokemonPhoneBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDD5392A2DB7277B00429E64 /* PhoneBook+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataClass.swift"; sourceTree = "<group>"; };
+		EDD5392B2DB7277B00429E64 /* PhoneBook+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		ED51AA732DB1E3950025D39E /* Exceptions for "PokemonPhoneBook" folder in "PokemonPhoneBook" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Resources/Info.plist,
+				Info.plist,
 			);
 			target = ED51AA472DB1E3930025D39E /* PokemonPhoneBook */;
 		};
@@ -83,6 +87,8 @@
 		ED51AA3F2DB1E3930025D39E = {
 			isa = PBXGroup;
 			children = (
+				EDD5392A2DB7277B00429E64 /* PhoneBook+CoreDataClass.swift */,
+				EDD5392B2DB7277B00429E64 /* PhoneBook+CoreDataProperties.swift */,
 				ED51AA4A2DB1E3930025D39E /* PokemonPhoneBook */,
 				ED6988132DB1E58F00AD50A5 /* Frameworks */,
 				ED51AA492DB1E3930025D39E /* Products */,
@@ -248,6 +254,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDD5392C2DB7277B00429E64 /* PhoneBook+CoreDataClass.swift in Sources */,
+				EDD5392D2DB7277B00429E64 /* PhoneBook+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

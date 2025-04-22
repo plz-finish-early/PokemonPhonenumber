@@ -41,6 +41,9 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         // 네비게이션 바 숨기기
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        CoreDataManager.shared.readAllData()
+        tableView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -98,16 +101,21 @@ class ViewController: UIViewController {
 // MARK: - 테이블 뷰 델리게이트 설정
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return 5
+        return CoreDataManager.shared.phoneBooks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PhoneBookTableViewCell.id, for: indexPath) as? PhoneBookTableViewCell else { return UITableViewCell() }
         
+        let phoneBook = CoreDataManager.shared.phoneBooks[indexPath.row]
+        let imageUrl = phoneBook.value(forKey: "imageUrl") as? String ?? ""
+        let name = phoneBook.value(forKey: "name") as? String ?? ""
+        let phoneNumber = phoneBook.value(forKey: "phoneNumber") as? String ?? ""
+        
+        cell.configureCell(imageUrl: imageUrl, name: name, phoneNumber: phoneNumber)
+        
         return cell
     }
-    
-    
 }
 
 extension ViewController: UITableViewDelegate {

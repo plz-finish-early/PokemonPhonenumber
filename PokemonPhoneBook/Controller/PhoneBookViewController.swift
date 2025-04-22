@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import CoreData
 
 class PhoneBookViewController: UIViewController {
-    
+    private var profileImageUrl: String? // imageUrlString 저장할 프로퍼티 추가
+
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -53,7 +55,7 @@ class PhoneBookViewController: UIViewController {
 
         self.view.backgroundColor = .white
         self.navigationItem.title = "연락처 추가"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "적용", style: .done, target: self, action: #selector(Tapped))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "적용", style: .done, target: self, action: #selector(didApplyButtonTapped))
         
         setProfileImageView()
         setRamdomImageGenerationButton()
@@ -105,66 +107,28 @@ class PhoneBookViewController: UIViewController {
     
     // MARK: - 버튼 이벤트
     @objc
-      private func Tapped() {
+    private func didApplyButtonTapped() {
         print("적용 버튼이 탭 되었습니다.")
-      }
-    
-    @objc
-      private func ramdomImageGenerationButtonTapped() {
-        print("랜덤 이미지를 생성합니다.")
-          fetchPokemonImage()
-      }
-    
-    // MARK: - API 데이터 가져오기
-    private func fetchData<T: Decodable>(url: URL, completion: @escaping (T?) -> Void) {
-        let session = URLSession(configuration: .default)
         
-        session.dataTask(with: URLRequest(url: url)) { data, response, error in
-            guard let data, error == nil else {
-                print("데이터 로드 실패")
-                completion(nil)
-                return
-            }
-            let successRange = 200..<300
-            
-            if let response = response as? HTTPURLResponse, successRange.contains(response.statusCode) {
-                guard let decodedData = try? JSONDecoder().decode(T.self, from: data) else {
-                    print(response.statusCode, "JSON 디코딩 실패")
-                    completion(nil)
-                    return
-                }
-                completion(decodedData)
-            } else {
-                print("응답 오류")
-                completion(nil)
-            }
-        }.resume()
+        CoreDataManager.shared.createData(
+            imageUrl: profileImageUrl,
+            name: nameTextField.text ?? "",
+            phoneNumber: phoneNumTextField.text ?? "")
+        
+        self.navigationController?.popViewController(animated: true) // 전 화면으로 돌아가기
+        
     }
     
-    private func fetchPokemonImage() {
-        let ramdomNumber = String(Int.random(in: 1...1000))
-        let urlComponents = URLComponents(string: "https://pokeapi.co/api/v2/pokemon/\(ramdomNumber)")
+    @objc
+    private func ramdomImageGenerationButtonTapped() {
+        print("랜덤 이미지를 생성합니다.")
         
-        guard let url = urlComponents?.url else {
-            print("잘못된 URL")
-            return
-        }
-        
-        fetchData(url: url) { [weak self] (result: PokemonImageResult?) in
-            guard let self, let result else { return }
+        FetchAPI.shared.fetchPokemonImage { [weak self] image, imageUrlStr in
+            guard let self else { return }
             
-            
-            guard let imageUrl = URL(string: "\(result.sprites.frontDefault)") else {
-                print("이미지 불러오기 실패")
-                return
-            }
-            
-            if let data = try? Data(contentsOf: imageUrl) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self.profileImageView.image = image
-                    }
-                }
+            DispatchQueue.main.async {
+                self.profileImageView.image = image
+                self.profileImageUrl = imageUrlStr // CoreData에 저장
             }
         }
     }
