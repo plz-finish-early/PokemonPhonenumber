@@ -86,6 +86,7 @@ extension ContactsListViewController: UITableViewDelegate {
         
         return UISwipeActionsConfiguration(actions: [delete])
     }
+}
     
 extension ContactsListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -107,6 +108,7 @@ extension ContactsListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let contactsDetailViewController = ContactsDetailViewController()
         
+        //별도의 메서드를 통해서 제어
         contactsDetailViewController.currentUUID = data[indexPath.row].uuid.uuidString
         contactsDetailViewController.nameTextField.text = data[indexPath.row].name
         contactsDetailViewController.numberTextField.text = data[indexPath.row].phoneNumber

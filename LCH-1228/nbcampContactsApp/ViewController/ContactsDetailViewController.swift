@@ -9,6 +9,8 @@ import SnapKit
 
 class ContactsDetailViewController: UIViewController {
     
+    var currentUUID = ""
+    
     let profileImage: UIImageView = {
         let imageView = UIImageView()
         let colorConfig = UIImage.SymbolConfiguration(hierarchicalColor: .blue)
@@ -56,8 +58,6 @@ class ContactsDetailViewController: UIViewController {
         textField.keyboardType = .phonePad
         return textField
     }()
-    
-    var currentUUID = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,26 +123,8 @@ class ContactsDetailViewController: UIViewController {
                                                             action: #selector(editButtonTapped))
     }
     
-    private func fetchData<T>(url: URL, completion: @escaping (T?) -> Void) {
-        let session = URLSession(configuration: .default)
-        session.dataTask(with: URLRequest(url: url)) { data, response, error in
-            guard let data, error == nil else {
-                print("데이터 받아오기 실패")
-                completion(nil)
-                return
-            }
-            
-            let successHttpResponeRange = 200..<300
-            if let response = response as? HTTPURLResponse, successHttpResponeRange.contains(response.statusCode) {
-                completion(data as? T)
-            } else {
-                print("응답 오류")
-                completion(nil)
-            }
-        }.resume()
-    }
-    
     private func fetchImageData() {
+        let networkServices = NetworkServices()
         let ramdomNumber = Int.random(in: 1...1025)
         
         var urlComponent = URLComponents(string: "https://pokeapi.co")
@@ -151,7 +133,7 @@ class ContactsDetailViewController: UIViewController {
             print("url 생성 실패")
             return
         }
-        fetchData(url: url) { [weak self] (result: Data?) in
+        networkServices.fetchData(url: url) { [weak self] (result: Data?) in
             guard let self, let result else { return }
             
             guard let decodedData = try? JSONDecoder().decode(ImageData.self, from: result) else {
@@ -164,7 +146,7 @@ class ContactsDetailViewController: UIViewController {
                 return
             }
             
-            fetchData(url: imageUrl) { [weak self] (result: Data?) in
+            networkServices.fetchData(url: imageUrl) { [weak self] (result: Data?) in
                 guard let self, let result else { return }
                 
                 if let image = UIImage(data: result) {
