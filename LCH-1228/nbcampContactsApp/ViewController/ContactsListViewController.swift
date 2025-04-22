@@ -10,7 +10,7 @@ import SnapKit
 
 class ContactsListViewController: UIViewController {
     
-    var data: [(uuid: UUID, name: String, phoneNumber: String, profileImage: Data)] = []
+    private var data: [(uuid: UUID, name: String, phoneNumber: String, profileImage: Data)] = []
         
     private lazy var contactList: UITableView = {
         let tableView = UITableView()
@@ -68,6 +68,15 @@ extension ContactsListViewController: UITableViewDelegate {
         return 100
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let contactsDetailViewController = ContactsDetailViewController()
+        contactsDetailViewController.indexPath = indexPath
+        
+        contactsDetailViewController.configureEditUI()
+        
+        navigationController?.pushViewController(contactsDetailViewController, animated: false)
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "방생하기") { [weak self] (UIContextualAction, UIView, result: @escaping (Bool) -> Void) in
             print("방생하기 실행됨")
@@ -103,22 +112,5 @@ extension ContactsListViewController: UITableViewDataSource {
         cell.profileImage.image = UIImage(data: data[indexPath.row].profileImage)
         
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let contactsDetailViewController = ContactsDetailViewController()
-        
-        //별도의 메서드를 통해서 제어
-        contactsDetailViewController.currentUUID = data[indexPath.row].uuid.uuidString
-        contactsDetailViewController.nameTextField.text = data[indexPath.row].name
-        contactsDetailViewController.numberTextField.text = data[indexPath.row].phoneNumber
-        contactsDetailViewController.profileImage.image = UIImage(data: data[indexPath.row].profileImage)
-        
-        if !contactsDetailViewController.isViewLoaded {
-            contactsDetailViewController.loadViewIfNeeded()
-        }
-        contactsDetailViewController.configureEditNav(title: data[indexPath.row].name, buttonName: "수정")
-        
-        navigationController?.pushViewController(contactsDetailViewController, animated: false)
     }
 }

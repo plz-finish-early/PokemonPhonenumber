@@ -44,7 +44,7 @@ class ContactsListCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureUI() {
+    private func configureUI() {
         [
             profileImage,
             nameLabel,

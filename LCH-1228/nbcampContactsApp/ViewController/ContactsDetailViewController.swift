@@ -9,9 +9,17 @@ import SnapKit
 
 class ContactsDetailViewController: UIViewController {
     
-    var currentUUID = ""
+    private var data: [(uuid: UUID, name: String, phoneNumber: String, profileImage: Data)] = []
     
-    let profileImage: UIImageView = {
+    var indexPath = IndexPath() {
+        didSet {
+            data = CoreDataManager.shard.getAllData().sorted{
+                $0.name < $1.name
+            }
+        }
+    }
+    
+    private let profileImage: UIImageView = {
         let imageView = UIImageView()
         let colorConfig = UIImage.SymbolConfiguration(hierarchicalColor: .blue)
         if let image = UIImage(systemName: "questionmark.circle.fill", withConfiguration: colorConfig) {
@@ -36,7 +44,7 @@ class ContactsDetailViewController: UIViewController {
         return button
     }()
     
-    let nameTextField: UITextField = {
+    private let nameTextField: UITextField = {
         let textField = UITextField()
         textField.attributedPlaceholder = NSAttributedString(
             string: "이름을 입력하세요",
@@ -47,7 +55,7 @@ class ContactsDetailViewController: UIViewController {
         return textField
     }()
     
-    let numberTextField: UITextField = {
+    private let numberTextField: UITextField = {
         let textField = UITextField()
         textField.attributedPlaceholder = NSAttributedString(
             string: "전화번호를 입력하세요",
@@ -63,11 +71,11 @@ class ContactsDetailViewController: UIViewController {
         super.viewDidLoad()
         print("viewDidLoad[ContactsDetail]")
         configureUI()
-        configureAddNav()
+        configureNavigationBar()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        configureAddNav()
+        configureNavigationBar()
     }
     
     private func configureUI() {
@@ -107,20 +115,15 @@ class ContactsDetailViewController: UIViewController {
         }
     }
     
-    func configureAddNav() {
-        navigationItem.title = "포켓몬 추가"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "저장",
-                                                            style: .plain,
-                                                            target: self,
-                                                            action: #selector(addButtonTapped))
-    }
-    
-    func configureEditNav(title: String, buttonName: String) {
+    private func configureNavigationBar(title: String = "포켓몬 추가", buttonTitle: String = "저장", action: Selector = #selector(addButtonTapped)) {
+        if !self.isViewLoaded {
+            self.loadViewIfNeeded()
+        }
         navigationItem.title = title
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: buttonName,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: buttonTitle,
                                                             style: .plain,
                                                             target: self,
-                                                            action: #selector(editButtonTapped))
+                                                            action: action)
     }
     
     private func fetchImageData() {
@@ -158,6 +161,15 @@ class ContactsDetailViewController: UIViewController {
         }
     }
     
+    func configureEditUI() {
+        
+        nameTextField.text = data[indexPath.row].name
+        numberTextField.text = data[indexPath.row].phoneNumber
+        profileImage.image = UIImage(data: data[indexPath.row].profileImage)
+        
+        configureNavigationBar(title: data[indexPath.row].name, buttonTitle: "수정", action: #selector(editButtonTapped))
+    }
+    
     @objc private func addButtonTapped() {
         print("addButtonTapped")
         
@@ -179,13 +191,10 @@ class ContactsDetailViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc func editButtonTapped() {
+    @objc private func editButtonTapped() {
         print("editButtonTapped")
-        
-        guard let uuid = UUID(uuidString: currentUUID) else {
-            print("UUID 변환 실패")
-            return
-        }
+
+        let uuid = data[indexPath.row].uuid
         
         guard let name = nameTextField.text, nameTextField.text != nil else {
             print("이름 비어서 저장 못함")

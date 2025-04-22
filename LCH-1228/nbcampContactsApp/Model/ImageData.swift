@@ -16,7 +16,7 @@ struct SpritesObject: Codable {
 struct OtherObject: Codable {
     let officialArtwork: OfficialArtworkObject
     
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case officialArtwork = "official-artwork"
     }
 }
@@ -24,7 +24,7 @@ struct OtherObject: Codable {
 struct OfficialArtworkObject: Codable {
     let frontDefault: String
     
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"
     }
 }
