@@ -15,7 +15,16 @@ class PhoneBookViewController: UIViewController {
         view.backgroundColor = .white
         setupView()
         configure()
-
+        
+        title = "연락처 추가"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "적용",
+            style: .plain,
+            target: self,
+            action: #selector(didTapApply)
+            
+        )
         
     }
     
@@ -85,9 +94,6 @@ class PhoneBookViewController: UIViewController {
     }
     
     
-    
-    
-    
     private func setupView() {
         
         view.addSubview(profileIamgeView)
@@ -95,6 +101,11 @@ class PhoneBookViewController: UIViewController {
         view.addSubview(nameTextView)
         view.addSubview(phoneNumTextView)
      
-   
     }
+    
+    @objc private func didTapApply() {
+        print("적용 버튼 눌림")
+
+    }
+
 }
