@@ -11,19 +11,23 @@ import SnapKit
 class ContactsListViewController: UIViewController {
     
     private var data: [Contact] = []
-        
+    
     private lazy var contactList: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ContactsListCell.self, forCellReuseIdentifier: ContactsListCell.identifier)
+        tableView.register(ContactsListCell.self,
+                           forCellReuseIdentifier: ContactsListCell.identifier)
         return tableView
     }()
+}
+
+extension ContactsListViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("vewDidLoad[ViewController]")
-
+        
         configureUI()
         configureNav()
     }
@@ -31,6 +35,9 @@ class ContactsListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         reloadData()
     }
+}
+
+private extension ContactsListViewController {
     
     private func configureUI() {
         [
@@ -64,6 +71,7 @@ class ContactsListViewController: UIViewController {
 }
 
 extension ContactsListViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
@@ -95,8 +103,9 @@ extension ContactsListViewController: UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: [delete])
     }
 }
-    
+
 extension ContactsListViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }

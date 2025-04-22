@@ -29,7 +29,10 @@ class ContactsDetailViewController: UIViewController {
         }
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 75
-        imageView.layer.borderColor = .init(red: 128/255, green: 128/255, blue: 128/255, alpha: 0.8)
+        imageView.layer.borderColor = .init(red: 128/255,
+                                            green: 128/255,
+                                            blue: 128/255,
+                                            alpha: 0.8)
         imageView.layer.borderWidth = 2
         imageView.clipsToBounds = true
         return imageView
@@ -67,6 +70,10 @@ class ContactsDetailViewController: UIViewController {
         return textField
     }()
     
+}
+
+extension ContactsDetailViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad[ContactsDetail]")
@@ -77,6 +84,17 @@ class ContactsDetailViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         configureNavigationBar()
     }
+    
+    func configureEditUI() {
+        nameTextField.text = data[indexPath.row].name
+        numberTextField.text = data[indexPath.row].phoneNumber
+        profileImage.image = UIImage(data: data[indexPath.row].profileImage)
+        
+        configureNavigationBar(title: data[indexPath.row].name, buttonTitle: "수정", action: #selector(editButtonTapped))
+    }
+}
+
+private extension ContactsDetailViewController {
     
     private func configureUI() {
         view.backgroundColor = .systemBackground
@@ -115,7 +133,9 @@ class ContactsDetailViewController: UIViewController {
         }
     }
     
-    private func configureNavigationBar(title: String = "포켓몬 추가", buttonTitle: String = "저장", action: Selector = #selector(addButtonTapped)) {
+    private func configureNavigationBar(title: String = "포켓몬 추가",
+                                        buttonTitle: String = "저장",
+                                        action: Selector = #selector(addButtonTapped)) {
         if !self.isViewLoaded {
             self.loadViewIfNeeded()
         }
@@ -129,13 +149,15 @@ class ContactsDetailViewController: UIViewController {
     private func fetchImageData() {
         let networkServices = NetworkServices()
         let ramdomNumber = Int.random(in: 1...1025)
-        
         var urlComponent = URLComponents(string: "https://pokeapi.co")
+        
         urlComponent?.path = "/api/v2/pokemon/\(ramdomNumber)"
+        
         guard let url = urlComponent?.url else {
             print("url 생성 실패")
             return
         }
+        
         networkServices.fetchData(url: url) { [weak self] (result: Data?) in
             guard let self, let result else { return }
             
@@ -161,15 +183,6 @@ class ContactsDetailViewController: UIViewController {
         }
     }
     
-    func configureEditUI() {
-        
-        nameTextField.text = data[indexPath.row].name
-        numberTextField.text = data[indexPath.row].phoneNumber
-        profileImage.image = UIImage(data: data[indexPath.row].profileImage)
-        
-        configureNavigationBar(title: data[indexPath.row].name, buttonTitle: "수정", action: #selector(editButtonTapped))
-    }
-    
     @objc private func addButtonTapped() {
         print("addButtonTapped")
         
@@ -186,7 +199,12 @@ class ContactsDetailViewController: UIViewController {
             print("이미지 변환실패")
             return
         }
-        let newContact = Contact(uuid: UUID(), name: name, phoneNumber: number, profileImage: profileImageData)
+        
+        let newContact = Contact(uuid: UUID(),
+                                 name: name,
+                                 phoneNumber: number,
+                                 profileImage: profileImageData)
+        
         CoreDataManager.shard.createData(contact: newContact)
         
         navigationController?.popViewController(animated: true)
@@ -210,7 +228,11 @@ class ContactsDetailViewController: UIViewController {
             print("이미지 변환실패")
             return
         }
-        let editedContact = Contact(uuid: currentUUID, name: name, phoneNumber: number, profileImage: profileImageData)
+        let editedContact = Contact(uuid: currentUUID,
+                                    name: name,
+                                    phoneNumber: number,
+                                    profileImage: profileImageData)
+        
         CoreDataManager.shard.updateData(contact: editedContact)
         
         navigationController?.popViewController(animated: true)

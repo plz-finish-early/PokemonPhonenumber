@@ -15,7 +15,10 @@ class ContactsListCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 40
-        imageView.layer.borderColor = .init(red: 128/255, green: 128/255, blue: 128/255, alpha: 0.8)
+        imageView.layer.borderColor = .init(red: 128/255,
+                                            green: 128/255,
+                                            blue: 128/255,
+                                            alpha: 0.8)
         imageView.layer.borderWidth = 2
         imageView.clipsToBounds = true
         return imageView
