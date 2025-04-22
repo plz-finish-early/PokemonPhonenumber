@@ -22,7 +22,7 @@ class CoreDataManager {
     }
     
     // 데이터 저장
-    func createData(image: UIImage?, name: String, phoneNumber: String) {
+    func createData(imageUrl: String?, name: String, phoneNumber: String) {
         guard let entity = NSEntityDescription.entity(forEntityName: "PhoneBook", in: self.container.viewContext) else { return }
         
         let newPhoneBook = NSManagedObject(entity: entity, insertInto: self.container.viewContext)
@@ -31,8 +31,8 @@ class CoreDataManager {
         newPhoneBook.setValue(phoneNumber, forKey: "phoneNumber")
         
         // UIImage를 CoreData에 저장하려면 Data 타입으로 변환해야 됨.
-        if let imageData = image?.pngData() {
-            newPhoneBook.setValue(imageData, forKey: "image")
+        if let imageUrl = imageUrl {
+            newPhoneBook.setValue(imageUrl, forKey: "imageUrl")
         }
         
         do {
@@ -51,10 +51,10 @@ class CoreDataManager {
             for phoneBook in phoneBooks as [NSManagedObject] {
                 let name = phoneBook.value(forKey: "name") as? String ?? "이름 없음"
                 let phoneNumber = phoneBook.value(forKey: "phoneNumber") as? String ?? "번호 없음"
-                if let image = phoneBook.value(forKey: "image") as? Data {
-                    print("image: \(image), name: \(name), phoneNumber: \(phoneNumber)")
+                if let image = phoneBook.value(forKey: "imageUrl") as? String {
+                    print("imageUrl: \(image), name: \(name), phoneNumber: \(phoneNumber)")
                 } else {
-                    print("image: 이미지 없음, name: \(name), phoneNumber: \(phoneNumber)")
+                    print("imageUrl: 이미지 없음, name: \(name), phoneNumber: \(phoneNumber)")
                 }
             }
         } catch {

@@ -78,9 +78,29 @@ class PhoneBookTableViewCell: UITableViewCell {
         }
     }
     
-    public func configureCell(image: UIImage?, name: String, phoneNumber: String) {
-        pokemonImageView.image = image
+    public func configureCell(imageUrl: String?, name: String, phoneNumber: String) {
         nameLabel.text = name
         phoneNumLabel.text = phoneNumber
+        
+        // 이미지 URL이 없다면 기본 이미지로 설정
+        guard let imageUrl = imageUrl, let url = URL(string: imageUrl) else {
+            pokemonImageView.image = nil
+            return
+        }
+        
+        // URLSession으로 비동기 이미지 로드
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.pokemonImageView.image = image
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.pokemonImageView.image = nil // 실패 시 기본 이미지 설정
+                }
+            }
+        }.resume()
     }
 }

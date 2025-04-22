@@ -108,13 +108,11 @@ extension ViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PhoneBookTableViewCell.id, for: indexPath) as? PhoneBookTableViewCell else { return UITableViewCell() }
         
         let phoneBook = CoreDataManager.shared.phoneBooks[indexPath.row]
-        
-        let imageData = phoneBook.value(forKey: "image") as? Data
-        let image = imageData.flatMap { UIImage(data: $0) }
+        let imageUrl = phoneBook.value(forKey: "imageUrl") as? String ?? ""
         let name = phoneBook.value(forKey: "name") as? String ?? ""
         let phoneNumber = phoneBook.value(forKey: "phoneNumber") as? String ?? ""
         
-        cell.configureCell(image: image, name: name, phoneNumber: phoneNumber)
+        cell.configureCell(imageUrl: imageUrl, name: name, phoneNumber: phoneNumber)
         
         return cell
     }
