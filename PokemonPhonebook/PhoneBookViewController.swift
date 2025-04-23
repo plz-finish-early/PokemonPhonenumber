@@ -105,7 +105,7 @@ class PhoneBookViewController: UIViewController {
         
     }
     
-
+    
     
     @objc private func didTapRandomImageButton() {
         let randomNum = Int.random(in: 1...300)
@@ -138,13 +138,14 @@ class PhoneBookViewController: UIViewController {
                 return
             }
             do {
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let sprites = json["sprites"] as? [String: Any],
-                   let imageUrlStr = sprites["front_default"] as? String,
+                let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+                
+                if let imageUrlStr = pokemon.sprites.front_default,
                    let imageUrl = URL(string: imageUrlStr) {
                     
                     DispatchQueue.global().async {
-                        if let imageData = try? Data(contentsOf: imageUrl), let image = UIImage(data: imageData) {
+                        if let imageData = try? Data(contentsOf: imageUrl),
+                           let image = UIImage(data: imageData) {
                             DispatchQueue.main.async {
                                 self.profileIamgeView.image = image
                             }
@@ -152,12 +153,11 @@ class PhoneBookViewController: UIViewController {
                             print("이미지 로딩 실패")
                         }
                     }
-
                 }
-                
             } catch {
-                print("json 파싱 에러: \(error.localizedDescription)")
+                print("디코딩 실패: \(error.localizedDescription)")
             }
+ 
         }
         
         task.resume()
