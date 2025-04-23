@@ -17,6 +17,10 @@ class AddContactViewController: UIViewController {
     let randomImageButton = UIButton()
     let imageView = UIImageView()
     
+    //폰북뷰컨에서 전달받을 데이터
+    var contactToEdit: PhoneBook?
+    
+    //랜덤선택된 포키몬 이미지 저장할 변수
     var selectedPokemonImageURL: String?
     
     override func viewDidLoad() {
@@ -30,6 +34,21 @@ class AddContactViewController: UIViewController {
         self.container = appDelegate.persistentContainer
         
         configureUI()
+        
+        //이미 저장된 데이터가 있으면 
+        if let contact = contactToEdit {
+            nameTextField.text = contact.name
+            phoneTextField.text = contact.phoneNumber
+            if let urlString = contact.profileImage, let url = URL(string: urlString) {
+                URLSession.shared.dataTask(with: url) { data, _, error in
+                    guard let data = data, error == nil, let image = UIImage(data: data) else { return }
+                    DispatchQueue.main.async {
+                        self.imageView.image = image
+                        self.selectedPokemonImageURL = urlString // 수정/저장에도 활용
+                    }
+                }.resume()
+            }
+        }
     }
     
     //서버 데이터 불러오는 메서드 여러가지 데이터를 받아올 때 공통적으로 쓰이는 뼈대같은 코드
@@ -95,17 +114,36 @@ class AddContactViewController: UIViewController {
             print("저장 실패")
         }
     }
-
+    
     
     @objc func randomImageButtonTapped() {
         fetchPokemonData()
     }
     
     @objc private func addContactSave() {
-        createData(name: nameTextField.text ?? "",
-                   phoneNumber: phoneTextField.text ?? "",
-                   profileImageURL: selectedPokemonImageURL ?? "")
         
+        let name = nameTextField.text ?? ""
+        let phone = phoneTextField.text ?? ""
+        let imageURL = selectedPokemonImageURL ?? ""
+
+        if let contact = contactToEdit {
+            // 기존 데이터 수정
+            contact.name = name
+            contact.phoneNumber = phone
+            contact.profileImage = imageURL
+        } else {
+            // 신규 데이터 생성
+            createData(name: name, phoneNumber: phone, profileImageURL: imageURL)
+        }
+        
+        do {
+                try container.viewContext.save()
+                print("저장 성공")
+            } catch {
+                print("저장 실패")
+            }
+        
+        //누르면 다시 부모뷰로 돌아가기
         self.navigationController?.popViewController(animated: true)
     }
     

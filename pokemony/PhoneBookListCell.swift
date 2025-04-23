@@ -39,6 +39,9 @@ class PhoneBookListCell: UITableViewCell {
                         self.photoImageView.image = image
                     }
                 }.resume()
+                // 랜덤으로 이미지 안 받아오면 이미지 안 보여줌
+            } else {
+                self.photoImageView.image = nil
             }
         }
     

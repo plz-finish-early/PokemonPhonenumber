@@ -116,6 +116,26 @@ extension PhoneBookListViewController: UITableViewDelegate, UITableViewDataSourc
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedContact = fetchedResultsController.object(at: indexPath)
+            let addVC = AddContactViewController()
+            addVC.contactToEdit = selectedContact // 데이터 전달
+            self.navigationController?.pushViewController(addVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            let contactToDelete = fetchedResultsController.object(at: indexPath)
+            context.delete(contactToDelete)
+            do {
+                try context.save()
+            } catch {
+                print("삭제 실패: \(error)")
+            }
+        }
+    }
 }
 
 extension PhoneBookListViewController: NSFetchedResultsControllerDelegate {
