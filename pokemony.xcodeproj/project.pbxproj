@@ -6,15 +6,8 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		F194E7B22DAE150C00D6AEB1 /* PhoneBook+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F194E7B12DAE150C00D6AEB1 /* PhoneBook+CoreDataProperties.swift */; };
-		F194E7B32DAE150C00D6AEB1 /* PhoneBook+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F194E7B02DAE150C00D6AEB1 /* PhoneBook+CoreDataClass.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		F194E7952DAE07D500D6AEB1 /* pokemony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pokemony.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F194E7B02DAE150C00D6AEB1 /* PhoneBook+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataClass.swift"; sourceTree = "<group>"; };
-		F194E7B12DAE150C00D6AEB1 /* PhoneBook+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +29,11 @@
 			path = pokemony;
 			sourceTree = "<group>";
 		};
+		F1C097212DB93B3700FDA124 /* CoreData */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,8 +50,7 @@
 		F194E78C2DAE07D500D6AEB1 = {
 			isa = PBXGroup;
 			children = (
-				F194E7B02DAE150C00D6AEB1 /* PhoneBook+CoreDataClass.swift */,
-				F194E7B12DAE150C00D6AEB1 /* PhoneBook+CoreDataProperties.swift */,
+				F1C097212DB93B3700FDA124 /* CoreData */,
 				F194E7972DAE07D500D6AEB1 /* pokemony */,
 				F194E7962DAE07D500D6AEB1 /* Products */,
 			);
@@ -84,6 +81,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				F194E7972DAE07D500D6AEB1 /* pokemony */,
+				F1C097212DB93B3700FDA124 /* CoreData */,
 			);
 			name = pokemony;
 			packageProductDependencies = (
@@ -141,8 +139,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F194E7B22DAE150C00D6AEB1 /* PhoneBook+CoreDataProperties.swift in Sources */,
-				F194E7B32DAE150C00D6AEB1 /* PhoneBook+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +157,6 @@
 				INFOPLIST_FILE = pokemony/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -189,7 +184,6 @@
 				INFOPLIST_FILE = pokemony/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
