@@ -20,6 +20,7 @@ extension PhoneBook {
     @NSManaged public var phoneNumber: String?
     @NSManaged public var profileImage: Data?
     @NSManaged public var uuid: UUID?
+    @NSManaged public var imageNmae: String?
 
 }
 

@@ -12,9 +12,11 @@ class ContactsDetailViewController: UIViewController {
     
     private var data: [Contact] = []
     
+    private var imageName = ""
+    
     var indexPath = IndexPath() {
         didSet {
-            data = CoreDataManager.shard.getAllData().sorted{
+            data = CoreDataManager.shared.getAllData().sorted{
                 $0.name < $1.name
             }
         }
@@ -103,7 +105,7 @@ private extension ContactsDetailViewController {
             profileImage,
             getImageButton,
             nameTextField,
-            numberTextField
+            numberTextField,
         ].forEach{ view.addSubview($0) }
         
         profileImage.snp.makeConstraints {
@@ -149,30 +151,19 @@ private extension ContactsDetailViewController {
     
     private func fetchImageData() {
         let networkServices = NetworkServices()
-        let ramdomNumber = Int.random(in: 1...1025)
-        var urlComponent = URLComponents(string: "https://pokeapi.co")
         
-        urlComponent?.path = "/api/v2/pokemon/\(ramdomNumber)"
-        
-        guard let url = urlComponent?.url else {
-            print("url 생성 실패")
-            return
-        }
-        
-        networkServices.fetchData(url: url) { [weak self] (result: Result<ImageData, AFError>) in
+        networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, AFError>) in
             switch result {
             case .success(let result):
                 guard let imageURL = URL(string: result.sprites.other.officialArtwork.frontDefault) else {
                     return
                 }
-                
                 AF.request(imageURL).response { response in
                     if let data = response.data, let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self?.profileImage.image = image
-                        }
+                        self?.profileImage.image = image
                     }
                 }
+                self?.imageName = result.species.name
             case .failure(let error):
                 print(error)
             }
@@ -199,9 +190,10 @@ private extension ContactsDetailViewController {
         let newContact = Contact(uuid: UUID(),
                                  name: name,
                                  phoneNumber: number,
-                                 profileImage: profileImageData)
+                                 profileImage: profileImageData,
+                                 imageName: imageName)
         
-        CoreDataManager.shard.createData(contact: newContact)
+        CoreDataManager.shared.createData(contact: newContact)
         
         navigationController?.popViewController(animated: true)
     }
@@ -209,7 +201,7 @@ private extension ContactsDetailViewController {
     @objc private func editButtonTapped() {
         print("editButtonTapped")
 
-        let currentUUID = data[indexPath.row].uuid
+        let currentData = data[indexPath.row]
         
         guard let name = nameTextField.text, nameTextField.text != nil else {
             print("이름 비어서 저장 못함")
@@ -224,12 +216,13 @@ private extension ContactsDetailViewController {
             print("이미지 변환실패")
             return
         }
-        let editedContact = Contact(uuid: currentUUID,
+        let editedContact = Contact(uuid: currentData.uuid,
                                     name: name,
                                     phoneNumber: number,
-                                    profileImage: profileImageData)
+                                    profileImage: profileImageData,
+                                    imageName: currentData.imageName)
         
-        CoreDataManager.shard.updateData(contact: editedContact)
+        CoreDataManager.shared.updateData(contact: editedContact)
         
         navigationController?.popViewController(animated: true)
     }

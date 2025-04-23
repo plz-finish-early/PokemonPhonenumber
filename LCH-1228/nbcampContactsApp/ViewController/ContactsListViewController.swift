@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Alamofire
 
 class ContactsListViewController: UIViewController {
     
@@ -59,10 +60,101 @@ private extension ContactsListViewController {
     }
     
     private func reloadData() {
-        data = CoreDataManager.shard.getAllData().sorted{
+        data = CoreDataManager.shared.getAllData().sorted{
             $0.name < $1.name
         }
         contactList.reloadData()
+    }
+    
+    private func getRandomImage(contact: Contact) {
+        let networkServices = NetworkServices()
+        
+        networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, AFError>) in
+            switch result {
+            case .success(let result):
+                guard let imageURL = URL(string: result.sprites.other.officialArtwork.frontDefault) else {
+                    return
+                }
+                AF.request(imageURL).response { response in
+                    if let data = response.data, let image = UIImage(data: data)?.pngData() {
+                        let newContact = Contact(uuid: contact.uuid,
+                                                 name: contact.name,
+                                                 phoneNumber: contact.phoneNumber,
+                                                 profileImage: image,
+                                                 imageName: result.species.name)
+                        CoreDataManager.shared.updateData(contact: newContact)
+                        self?.reloadData()
+                    }
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    private func makeEvolve(contact: Contact) {
+        let imageName = contact.imageName
+        guard imageName != "" else {
+            print("이름이 없어 랜덤으로 생성")
+            getRandomImage(contact: contact)
+            return
+        }
+        
+        let networkServices = NetworkServices()
+        
+        networkServices.fetchEvolutionData(name: imageName) { response in
+            switch response {
+            case .success(let result):
+                let evolutionStepArray = makeEvolutionArray(from: result.chain)
+                guard evolutionStepArray.count != 1 else {
+                    print("진화형태가 1개 입니다.")
+                    return
+                }
+                guard let index = evolutionStepArray.firstIndex(of: [imageName]) else {
+                    print("index 생성 실패")
+                    return
+                }
+                guard evolutionStepArray.count - 1 != index else {
+                    print("다음 진화형태가 없습니다.")
+                    return
+                }
+
+                var evolvedName: String?
+                let evolvedNameArray = evolutionStepArray[index + 1]
+                evolvedName = evolvedNameArray.randomElement()
+                
+                guard let evolvedName = evolvedName else {
+                    print("이름 추출 실패")
+                    return
+                }
+                networkServices.fetchDataByName(name: evolvedName) { response in
+            
+                    switch response {
+                    case .success(let callImageresult):
+                        
+                        guard let imageURL = URL(string: callImageresult.sprites.other.officialArtwork.frontDefault) else {
+                            return
+                        }
+                        AF.request(imageURL).response { response in
+                            if let data = response.data, let evolvedimage = UIImage(data: data)?.pngData() {
+                                let newContact = Contact(uuid: contact.uuid,
+                                                         name: contact.name,
+                                                         phoneNumber: contact.phoneNumber,
+                                                         profileImage: evolvedimage,
+                                                         imageName: evolvedName)
+                                CoreDataManager.shared.updateData(contact: newContact)
+                                self.reloadData()
+                            }
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     @objc private func showContactsDetailView() {
@@ -85,6 +177,25 @@ extension ContactsListViewController: UITableViewDelegate {
         navigationController?.pushViewController(contactsDetailViewController, animated: false)
     }
     
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let upgrade = UIContextualAction(style: .normal, title: "진화하기") { [weak self] (UIContextualAction, UIView, result: @escaping (Bool) -> Void) in
+            guard let self = self else {
+                result(false)
+                return
+            }
+            let targetContact = data[indexPath.row]
+            makeEvolve(contact: targetContact)
+            result(true)
+        }
+        upgrade.backgroundColor = .systemOrange
+        upgrade.image = UIImage(systemName: "hand.rays")
+        
+        print("leadinSwipeAction 버튼 표시")
+        
+        return UISwipeActionsConfiguration(actions: [upgrade])
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "방생하기") { [weak self] (UIContextualAction, UIView, result: @escaping (Bool) -> Void) in
             print("방생하기 실행됨")
@@ -94,11 +205,11 @@ extension ContactsListViewController: UITableViewDelegate {
                 return
             }
             let targetContact = data[indexPath.row]
-            CoreDataManager.shard.deleteData(contact: targetContact)
+            CoreDataManager.shared.deleteData(contact: targetContact)
             reloadData()
             result(true)
         }
-        print("방생하기 버튼 표시")
+        print("leadinSwipeAction 버튼 표시")
         
         return UISwipeActionsConfiguration(actions: [delete])
     }

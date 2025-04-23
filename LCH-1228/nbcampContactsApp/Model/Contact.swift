@@ -12,4 +12,5 @@ struct Contact {
     let name: String
     let phoneNumber: String
     let profileImage: Data
+    let imageName: String
 }

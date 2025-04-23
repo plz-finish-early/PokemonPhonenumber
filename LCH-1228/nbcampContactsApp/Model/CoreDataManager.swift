@@ -8,7 +8,7 @@ import UIKit
 import CoreData
 
 class CoreDataManager {
-    static let shard: CoreDataManager = CoreDataManager()
+    static let shared: CoreDataManager = CoreDataManager()
     
     private let appDelegate = UIApplication.shared.delegate as? AppDelegate
     private lazy var container = appDelegate?.persistentContainer
@@ -26,6 +26,7 @@ class CoreDataManager {
         newPhoneBook.setValue(contact.name, forKey: PhoneBook.Key.name)
         newPhoneBook.setValue(contact.phoneNumber, forKey: PhoneBook.Key.phoneNumber)
         newPhoneBook.setValue(contact.profileImage, forKey: PhoneBook.Key.profileImage)
+        newPhoneBook.setValue(contact.imageName, forKey: PhoneBook.Key.imageName)
         do {
             try container.viewContext.save()
             print("저장 성공")
@@ -56,7 +57,11 @@ class CoreDataManager {
                     print("이미지 값 추출 실패")
                     return
                 }
-                    print("uuid: \(uuid), name: \(name), phoneNumber: \(phoneNumber), profileImage: \(profileImage)")
+                guard let imageName = phoneBook.value(forKey: PhoneBook.Key.imageName) as? String else {
+                    print("이름 추출 실패")
+                    return
+                }
+                    print("uuid: \(uuid), name: \(name), phoneNumber: \(phoneNumber), profileImage: \(profileImage), imageName: \(imageName)")
                 }
             print("전체 데이터 읽기 성공")
         } catch {
@@ -86,7 +91,11 @@ class CoreDataManager {
                     print("이미지 추출 실패")
                     return []
                 }
-                let data = Contact(uuid: uuid, name: name, phoneNumber: phoneNumber, profileImage: profileImage)
+                guard let imageName = phoneBook.value(forKey: PhoneBook.Key.imageName) as? String else {
+                    print("이름 추출 실패")
+                    return []
+                }
+                let data = Contact(uuid: uuid, name: name, phoneNumber: phoneNumber, profileImage: profileImage, imageName: imageName)
                 allData.append(data)
             }
             print("데이터 추출 성공")
@@ -106,10 +115,11 @@ class CoreDataManager {
             let result = try container.viewContext.fetch(fetchRequest)
             
             for data in result as [NSManagedObject] {
-                data.setValue(UUID(), forKey: PhoneBook.Key.uuid)
+                data.setValue(contact.uuid, forKey: PhoneBook.Key.uuid)
                 data.setValue(contact.name, forKey: PhoneBook.Key.name)
                 data.setValue(contact.phoneNumber, forKey: PhoneBook.Key.phoneNumber)
                 data.setValue(contact.profileImage, forKey: PhoneBook.Key.profileImage)
+                data.setValue(contact.imageName, forKey: PhoneBook.Key.imageName)
             }
             
             try container.viewContext.save()
