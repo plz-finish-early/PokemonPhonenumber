@@ -9,15 +9,14 @@ import Alamofire
 
 class NetworkServices {
     
-    func fetchRandomData(completion: @escaping (Result<RandomResult, AFError>) -> Void) {
+    func fetchRandomData(completion: @escaping (Result<RandomResult, AFError>) -> Void) throws {
         let ramdomNumber = Int.random(in: 1...1025)
         var urlComponent = URLComponents(string: "https://pokeapi.co")
         
         urlComponent?.path = "/api/v2/pokemon/\(ramdomNumber)"
         
         guard let url = urlComponent?.url else {
-            print("url 생성 실패")
-            return
+            throw CustomNetworkError.invalidURL
         }
         
         AF.request(url).responseDecodable(of: RandomResult.self) { response in
@@ -31,7 +30,7 @@ class NetworkServices {
         urlComponent?.path = "/api/v2/pokemon/\(name)"
         
         guard let url = urlComponent?.url else {
-            print("url 생성 실패")
+            print("url없음")
             return
         }
         AF.request(url).responseDecodable(of: RandomResult.self) { response in
@@ -39,14 +38,13 @@ class NetworkServices {
         }
     }
     
-    func fetchEvolutionData(name: String, completion: @escaping (Result<EvolutionResult, AFError>) -> Void) {
+    func fetchEvolutionData(name: String, completion: @escaping (Result<EvolutionResult, AFError>) -> Void) throws {
         var urlComponent = URLComponents(string: "https://pokeapi.co")
         
         urlComponent?.path = "/api/v2/pokemon/\(name)"
         
         guard let url = urlComponent?.url else {
-            print("url 생성 실패")
-            return
+            throw CustomNetworkError.invalidURL
         }
         
         AF.request(url).responseDecodable(of: RandomResult.self) { response in

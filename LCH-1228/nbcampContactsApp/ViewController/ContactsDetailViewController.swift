@@ -151,78 +151,93 @@ private extension ContactsDetailViewController {
     
     private func fetchImageData() {
         let networkServices = NetworkServices()
-        
-        networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, AFError>) in
-            switch result {
-            case .success(let result):
-                guard let imageURL = URL(string: result.sprites.other.officialArtwork.frontDefault) else {
-                    return
-                }
-                AF.request(imageURL).response { response in
-                    if let data = response.data, let image = UIImage(data: data) {
-                        self?.profileImage.image = image
+        do {
+            try networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, AFError>) in
+                switch result {
+                case .success(let result):
+                    guard let imageURL = URL(string: result.sprites.other.officialArtwork.frontDefault) else {
+                        return
                     }
+                    AF.request(imageURL).response { response in
+                        if let data = response.data, let image = UIImage(data: data) {
+                            self?.profileImage.image = image
+                        }
+                    }
+                    self?.imageName = result.species.name
+                case .failure(let error):
+                    print(error)
                 }
-                self?.imageName = result.species.name
-            case .failure(let error):
-                print(error)
             }
+        } catch {
+            guard let error = error as? CustomNetworkError else { return }
+            showAlert(error)
         }
+        
+    }
+    
+    private func showAlert(_ error: Error) {
+        guard let alertError = error as? AlertError else { return }
+        let alert = UIAlertController(title: nil, message: alertError.alertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        self.present(alert, animated: true)
     }
     
     @objc private func addButtonTapped() {
         print("addButtonTapped")
-        
-        guard let name = nameTextField.text, !name.isEmpty else {
-            print("이름 비어서 저장 못함")
-            return
+        do {
+            guard let name = nameTextField.text, !name.isEmpty else {
+                throw ContactsDetailViewError.nameTextFieldIsEmpty
+            }
+            guard let number = numberTextField.text, !number.isEmpty else {
+                throw ContactsDetailViewError.numberTextFiledIsEmpty
+            }
+            
+            guard let profileImageData = profileImage.image!.pngData() else {
+                throw ContactsDetailViewError.faildCovertingProfileImage
+            }
+            
+            let newContact = Contact(uuid: UUID(),
+                                     name: name,
+                                     phoneNumber: number,
+                                     profileImage: profileImageData,
+                                     imageName: imageName)
+            
+            CoreDataManager.shared.createData(contact: newContact)
+            
+            navigationController?.popViewController(animated: true)
+        } catch {
+            guard let error = error as? ContactsDetailViewError else { return }
+            showAlert(error)
         }
-        guard let number = numberTextField.text, !number.isEmpty else {
-            print("번호 비어서 저장 못함")
-            return
-        }
         
-        guard let profileImageData = profileImage.image!.pngData() else {
-            print("이미지 변환실패")
-            return
-        }
-        
-        let newContact = Contact(uuid: UUID(),
-                                 name: name,
-                                 phoneNumber: number,
-                                 profileImage: profileImageData,
-                                 imageName: imageName)
-        
-        CoreDataManager.shared.createData(contact: newContact)
-        
-        navigationController?.popViewController(animated: true)
     }
     
     @objc private func editButtonTapped() {
         print("editButtonTapped")
 
         let currentData = data[indexPath.row]
-        
-        guard let name = nameTextField.text, !name.isEmpty else {
-            print("이름 비어서 저장 못함")
-            return
+        do {
+            guard let name = nameTextField.text, !name.isEmpty else {
+                throw ContactsDetailViewError.nameTextFieldIsEmpty
+            }
+            guard let number = numberTextField.text, !number.isEmpty else {
+                throw ContactsDetailViewError.numberTextFiledIsEmpty
+            }
+            
+            guard let profileImageData = profileImage.image!.pngData() else {
+                throw ContactsDetailViewError.faildCovertingProfileImage
+            }
+            let editedContact = Contact(uuid: currentData.uuid,
+                                        name: name,
+                                        phoneNumber: number,
+                                        profileImage: profileImageData,
+                                        imageName: currentData.imageName)
+            
+            CoreDataManager.shared.updateData(contact: editedContact)
+        } catch {
+            guard let error = error as? ContactsDetailViewError else { return }
+            showAlert(error)
         }
-        guard let number = numberTextField.text, !number.isEmpty else {
-            print("번호 비어서 저장 못함")
-            return
-        }
-        
-        guard let profileImageData = profileImage.image!.pngData() else {
-            print("이미지 변환실패")
-            return
-        }
-        let editedContact = Contact(uuid: currentData.uuid,
-                                    name: name,
-                                    phoneNumber: number,
-                                    profileImage: profileImageData,
-                                    imageName: currentData.imageName)
-        
-        CoreDataManager.shared.updateData(contact: editedContact)
         
         navigationController?.popViewController(animated: true)
     }
