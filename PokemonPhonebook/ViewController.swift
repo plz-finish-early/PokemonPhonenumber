@@ -7,8 +7,11 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 class ViewController: UIViewController {
+    
+    private var contactList: [CDContactEntity] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +20,12 @@ class ViewController: UIViewController {
         setupTableView()
         addButton.addTarget(self, action: #selector(didTapAdd), for: .touchUpInside)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchContacts()
+    }
+
 
     private func setupView() {
         view.backgroundColor = .white
@@ -76,18 +85,46 @@ class ViewController: UIViewController {
         let vc = PhoneBookViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    private func fetchContacts() {
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let request: NSFetchRequest<CDContactEntity> = CDContactEntity.fetchRequest()
+        
+        do {
+            contactList = try context.fetch(request)
+            tableView.reloadData()
+        } catch {
+            print("연락처 불러오기 실패: \(error.localizedDescription)")
+        }
+    }
+
+    
+    
+
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return contactList.count
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as? CustomCell else {
             return UITableViewCell()
         }
+        
+        let contact = contactList[indexPath.row]
+        cell.nameLabel.text = contact.name
+        cell.phoneLabel.text = contact.phoneNumber
+        
+        if let imageData = contact.imageData {
+            cell.iconView.image = UIImage(data: imageData)
+        } else {
+            cell.iconView.image = UIImage(systemName: "person.circle")
+        }
 
         return cell
     }
+    
+    
 }

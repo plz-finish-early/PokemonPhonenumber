@@ -22,7 +22,7 @@ class PhoneBookViewController: UIViewController {
             title: "적용",
             style: .plain,
             target: self,
-            action: #selector(didTapRandomImageButton)
+            action: #selector(didTapSaveButton)
             
         )
         
@@ -102,6 +102,29 @@ class PhoneBookViewController: UIViewController {
         view.addSubview(phoneNumTextView)
         
         randomImageAddButton.addTarget(self, action: #selector(didTapRandomImageButton), for: .touchUpInside)
+        
+    }
+    
+    
+    @objc func didTapSaveButton() {
+        
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let newContact = CDContactEntity(context: context)
+        newContact.name = nameTextView.text
+        newContact.phoneNumber = phoneNumTextView.text
+        
+        if let image = profileIamgeView.image {
+            newContact.imageData = image.jpegData(compressionQuality: 1.0)
+        }
+        
+        do {
+            try context.save()
+            print("저장 성공")
+        } catch {
+            print("저장 실패: \(error.localizedDescription)")
+        }
+        
+        navigationController?.popViewController(animated: true)
         
     }
     
