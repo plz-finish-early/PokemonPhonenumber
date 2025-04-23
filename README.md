@@ -60,6 +60,35 @@ Pokemony PhoneBook은 포켓몬 마니아들을 위해 만들어진 앱이에요
 
 ---
 
+## Directory Tree
+├── CoreData
+│   ├── PhoneBook+CoreDataClass.swift
+│   ├── PhoneBook+CoreDataProperties.swift
+│   └── pokemony.xcdatamodeld
+├── README.md
+├── pokemony
+│   ├── API
+│   │   └── PokemonData.swift
+│   ├── App
+│   │   ├── AppDelegate.swift
+│   │   └── SceneDelegate.swift
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
+│   │   ├── AppIcon.appiconset
+│   │   │   └── Contents.json
+│   │   └── Contents.json
+│   ├── Base.lproj
+│   ├── Info.plist
+│   ├── View
+│   │   └── PhoneBookListCell.swift
+│   └── ViewController
+│       ├── AddContactViewController.swift
+│       └── PhoneBookListViewController.swift
+└── pokemony.xcodeproj
+    
+---
+
 ## 📦 설치 및 실행 방법
 
 1. 이 저장소를 클론합니다:
