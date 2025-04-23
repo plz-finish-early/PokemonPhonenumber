@@ -31,7 +31,8 @@ class PhoneBookListViewController: UIViewController {
     // 추가: Core Data용 Fetched Results Controller
     lazy var fetchedResultsController: NSFetchedResultsController<PhoneBook> = {
         let fetchRequest: NSFetchRequest<PhoneBook> = PhoneBook.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)] // 이름 순 정렬
+        // 이름 순 정렬
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
