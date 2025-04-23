@@ -9,9 +9,11 @@ import UIKit
 import CoreData
 
 class PhoneBookViewController: UIViewController {
+    public var contactName: String? // title 변경에 사용할 변수
+    
     private var profileImageUrl: String? // imageUrlString 저장할 프로퍼티 추가
 
-    private let profileImageView: UIImageView = {
+    public let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .white
@@ -31,14 +33,14 @@ class PhoneBookViewController: UIViewController {
         return button
     }()
     
-    private let nameTextField: UITextField = {
+    public let nameTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .white
         textField.borderStyle = .roundedRect
         return textField
     }()
     
-    private let phoneNumTextField: UITextField = {
+    public let phoneNumTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         return textField
@@ -54,7 +56,14 @@ class PhoneBookViewController: UIViewController {
         super.viewDidLoad()
 
         self.view.backgroundColor = .white
-        self.navigationItem.title = "연락처 추가"
+        
+        // Title 분기 처리
+        if let contactName = contactName {
+            self.navigationItem.title = contactName
+        } else {
+            self.navigationItem.title = "연락처 추가"
+        }
+        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "적용", style: .done, target: self, action: #selector(didApplyButtonTapped))
         
         setProfileImageView()
