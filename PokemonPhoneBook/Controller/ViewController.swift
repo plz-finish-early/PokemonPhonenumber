@@ -123,4 +123,43 @@ extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let pv = PhoneBookViewController()
+        let phoneBook = CoreDataManager.shared.phoneBooks[indexPath.row]
+        let imageUrl = phoneBook.value(forKey: "imageUrl") as? String ?? ""
+        let name = phoneBook.value(forKey: "name") as? String ?? ""
+        let phoneNumber = phoneBook.value(forKey: "phoneNumber") as? String ?? ""
+        
+        // 이미지 URL이 없다면 기본 이미지로 설정
+        guard let url = URL(string: imageUrl) else {
+            pv.profileImageView.image = nil
+            pv.nameTextField.text = name
+            pv.phoneNumTextField.text = phoneNumber
+            
+            self.navigationController?.pushViewController(pv, animated: true)
+            return
+        }
+        
+        // URLSession으로 비동기 이미지 로드
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            //guard let self = self else { return }
+            
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    pv.profileImageView.image = image
+                }
+            } else {
+                DispatchQueue.main.async {
+                    pv.profileImageView.image = nil // 실패 시 기본 이미지 설정
+                }
+            }
+        }.resume()
+        
+        pv.nameTextField.text = name
+        pv.phoneNumTextField.text = phoneNumber
+        pv.contactName = name
+        
+        self.navigationController?.pushViewController(pv, animated: true)
+    }
 }
