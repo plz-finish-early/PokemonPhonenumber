@@ -17,6 +17,7 @@ class PhoneBookTableViewCell: UITableViewCell {
         imageView.layer.borderColor = UIColor.gray.cgColor
         imageView.layer.borderWidth = 1
         imageView.layer.cornerRadius = 30
+        imageView.clipsToBounds = true
         return imageView
     }()
     
