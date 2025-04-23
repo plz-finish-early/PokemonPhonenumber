@@ -51,6 +51,15 @@ class PhoneBookTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // 셀을 초기화
+        pokemonImageView.image = nil
+        nameLabel.text = ""
+        phoneNumLabel.text = ""
+    }
+    
     private func setPokemonImageView() {
         contentView.addSubview(pokemonImageView)
         
