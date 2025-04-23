@@ -45,8 +45,17 @@ class CoreDataManager {
     
     // 데이터 읽기
     func readAllData() {
+        // 데이터 요청
+        let request = NSFetchRequest<NSManagedObject>(entityName: "PhoneBook")
+        
+        // 이름 순으로 정렬 (오름차순)
+        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        
+        // 정렬 기준 적용
+        request.sortDescriptors = [sortDescriptor]
+        
         do {
-            phoneBooks = try self.container.viewContext.fetch(PhoneBook.fetchRequest())
+            phoneBooks = try self.container.viewContext.fetch(request)
             
             for phoneBook in phoneBooks as [NSManagedObject] {
                 let name = phoneBook.value(forKey: "name") as? String ?? "이름 없음"

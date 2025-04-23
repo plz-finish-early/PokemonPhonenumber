@@ -39,6 +39,7 @@ class ViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("viewWillAppear")
         // 네비게이션 바 숨기기
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         

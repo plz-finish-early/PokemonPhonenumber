@@ -38,7 +38,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		ED51AA732DB1E3950025D39E /* Exceptions for "PokemonPhoneBook" folder in "PokemonPhoneBook" target */ = {
+		EDD539B12DB7B63A00429E64 /* Exceptions for "PokemonPhoneBook" folder in "PokemonPhoneBook" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -51,7 +51,7 @@
 		ED51AA4A2DB1E3930025D39E /* PokemonPhoneBook */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				ED51AA732DB1E3950025D39E /* Exceptions for "PokemonPhoneBook" folder in "PokemonPhoneBook" target */,
+				EDD539B12DB7B63A00429E64 /* Exceptions for "PokemonPhoneBook" folder in "PokemonPhoneBook" target */,
 			);
 			path = PokemonPhoneBook;
 			sourceTree = "<group>";
