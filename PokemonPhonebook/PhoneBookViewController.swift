@@ -22,7 +22,7 @@ class PhoneBookViewController: UIViewController {
             title: "적용",
             style: .plain,
             target: self,
-            action: #selector(didTapApply)
+            action: #selector(didTapRandomImageButton)
             
         )
         
@@ -100,12 +100,67 @@ class PhoneBookViewController: UIViewController {
         view.addSubview(randomImageAddButton)
         view.addSubview(nameTextView)
         view.addSubview(phoneNumTextView)
-     
+        
+        randomImageAddButton.addTarget(self, action: #selector(didTapRandomImageButton), for: .touchUpInside)
+        
     }
     
-    @objc private func didTapApply() {
-        print("적용 버튼 눌림")
 
+    
+    @objc private func didTapRandomImageButton() {
+        let randomNum = Int.random(in: 1...300)
+        let urlString = "https://pokeapi.co/api/v2/pokemon/\(randomNum)"
+        
+        guard let url = URL(string: urlString) else {
+            print("URL 생성 실패")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 50
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            
+            if let error = error {
+                print("요청 실패: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("서버 응답 오류")
+                return
+            }
+            
+            guard let data = data else {
+                print("데이터 없음")
+                return
+            }
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let sprites = json["sprites"] as? [String: Any],
+                   let imageUrlStr = sprites["front_default"] as? String,
+                   let imageUrl = URL(string: imageUrlStr) {
+                    
+                    DispatchQueue.global().async {
+                        if let imageData = try? Data(contentsOf: imageUrl), let image = UIImage(data: imageData) {
+                            DispatchQueue.main.async {
+                                self.profileIamgeView.image = image
+                            }
+                        } else {
+                            print("이미지 로딩 실패")
+                        }
+                    }
+
+                }
+                
+            } catch {
+                print("json 파싱 에러: \(error.localizedDescription)")
+            }
+        }
+        
+        task.resume()
+        
     }
-
 }
