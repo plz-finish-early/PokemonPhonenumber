@@ -81,47 +81,21 @@ class CoreDataManager {
         let fetchRequest = PhoneBook.fetchRequest()
         
         // predicate 는 조건을 걸어주는 구문
-        fetchRequest.predicate = NSPredicate(format: "imageUrl == %@", currentImageUrl)
+        // 예외처리: imageUrl 이 "" 면 nil 인 값을 찾게 함.
+        fetchRequest.predicate = NSPredicate(format: "(imageUrl == %@ OR imageUrl == nil) AND name == %@ AND phoneNumber == %@", currentImageUrl, currentName, currentPhoneNumber)
         do {
             let result = try self.container.viewContext.fetch(fetchRequest)
-            
-            for data in result as [NSManagedObject] {
-                data.setValue(updateImageUrl, forKey: PhoneBook.Key.imageUrl)
+
+            if let objectToUpdate = result.first {
+                objectToUpdate.setValue(updateImageUrl, forKey: "imageUrl")
+                objectToUpdate.setValue(updateName, forKey: "name")
+                objectToUpdate.setValue(updatePhoneNumber, forKey: "phoneNumber")
+                
+                try self.container.viewContext.save()
+                print("데이터 수정 성공")
+            } else {
+                print("일치하는 데이터 없음")
             }
-            
-            try self.container.viewContext.save()
-            
-            print("데이터 수정 성공")
-        } catch {
-            print("데이터 수정 실패")
-        }
-        
-        fetchRequest.predicate = NSPredicate(format: "name == %@", currentName)
-        do {
-            let result = try self.container.viewContext.fetch(fetchRequest)
-            
-            for data in result as [NSManagedObject] {
-                data.setValue(updateName, forKey: PhoneBook.Key.name)
-            }
-            
-            try self.container.viewContext.save()
-            
-            print("데이터 수정 성공")
-        } catch {
-            print("데이터 수정 실패")
-        }
-        
-        fetchRequest.predicate = NSPredicate(format: "phoneNumber == %@", currentPhoneNumber)
-        do {
-            let result = try self.container.viewContext.fetch(fetchRequest)
-            
-            for data in result as [NSManagedObject] {
-                data.setValue(updatePhoneNumber, forKey: PhoneBook.Key.phoneNumber)
-            }
-            
-            try self.container.viewContext.save()
-            
-            print("데이터 수정 성공")
         } catch {
             print("데이터 수정 실패")
         }

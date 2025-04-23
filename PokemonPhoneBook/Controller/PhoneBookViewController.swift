@@ -25,6 +25,7 @@ class PhoneBookViewController: UIViewController {
         imageView.layer.borderColor = UIColor.gray.cgColor
         imageView.layer.borderWidth = 3
         imageView.layer.cornerRadius = 80
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -128,14 +129,6 @@ class PhoneBookViewController: UIViewController {
         if profileImageUrl == nil {
             profileImageUrl = PhoneBookImageUrl
         }
-//        guard let name = nameTextField.text,
-//              let phone = phoneNumTextField.text else {
-//            print("이름이나 전화번호가 비어있음")
-//            return
-//        }
-//        guard let currentImageUrl = PhoneBookImageUrl,
-//              let currentName = PhoneBookName,
-//              let currentPhoneNumber = PhoneBookPhoneNumber else { return }
         
         if isUpdate {
             CoreDataManager.shared.updateData(

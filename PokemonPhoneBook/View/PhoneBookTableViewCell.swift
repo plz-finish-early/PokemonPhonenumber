@@ -17,6 +17,7 @@ class PhoneBookTableViewCell: UITableViewCell {
         imageView.layer.borderColor = UIColor.gray.cgColor
         imageView.layer.borderWidth = 1
         imageView.layer.cornerRadius = 30
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -48,6 +49,15 @@ class PhoneBookTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // 셀을 초기화
+        pokemonImageView.image = nil
+        nameLabel.text = ""
+        phoneNumLabel.text = ""
     }
     
     private func setPokemonImageView() {
