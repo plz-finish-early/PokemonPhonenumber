@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class PhoneBookListViewController: UIViewController {
     
@@ -25,16 +26,27 @@ class PhoneBookListViewController: UIViewController {
         return label
     }()
     
-    let phoneBookListTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.backgroundColor = .white
-        tableView.register(PhoneBookListCell.self, forCellReuseIdentifier: PhoneBookListCell.identifier)
-        return tableView
+    let phoneBookListTableView = UITableView()
+    
+    // 추가: Core Data용 Fetched Results Controller
+    lazy var fetchedResultsController: NSFetchedResultsController<PhoneBook> = {
+        let fetchRequest: NSFetchRequest<PhoneBook> = PhoneBook.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)] // 이름 순 정렬
+        
+        let controller = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        controller.delegate = self
+        return controller
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        performFetch()
         
         topButton.addTarget(self, action: #selector(addContactPop), for: .touchUpInside)
         
@@ -47,12 +59,23 @@ class PhoneBookListViewController: UIViewController {
         self.navigationController?.pushViewController(secondVC, animated: true)
     }
     
+    private func performFetch() {
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("패치 실패: \(error)")
+        }
+    }
+    
     private func configureUI() {
         view.backgroundColor = .white
         
         [topLabel, topButton, phoneBookListTableView].forEach {
             view.addSubview($0)
         }
+        
+        phoneBookListTableView.backgroundColor = .white
+        phoneBookListTableView.register(PhoneBookListCell.self, forCellReuseIdentifier: PhoneBookListCell.identifier)
         
         topLabel.translatesAutoresizingMaskIntoConstraints = false
         topButton.translatesAutoresizingMaskIntoConstraints = false
@@ -61,7 +84,7 @@ class PhoneBookListViewController: UIViewController {
         NSLayoutConstraint.activate([
             topLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             topLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-
+            
             topButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             topButton.centerYAnchor.constraint(equalTo: topLabel.centerYAnchor),
             
@@ -81,11 +104,21 @@ extension PhoneBookListViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        return fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PhoneBookListCell.identifier, for: indexPath) as? PhoneBookListCell else { return UITableViewCell() }
+        // 현재 행에 해당하는 PhoneBook 객체 가져오기
+        let phoneBook = fetchedResultsController.object(at: indexPath)
+        cell.configure(with: phoneBook) // 셀에 데이터 전달
+        
         return cell
+    }
+}
+
+extension PhoneBookListViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        phoneBookListTableView.reloadData()
     }
 }

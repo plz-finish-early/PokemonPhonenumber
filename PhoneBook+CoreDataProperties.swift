@@ -18,7 +18,7 @@ extension PhoneBook {
 
     @NSManaged public var name: String?
     @NSManaged public var phoneNumber: String?
-    @NSManaged public var profileImage: Data?
+    @NSManaged public var profileImage: String?
 
 }
 

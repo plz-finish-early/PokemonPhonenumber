@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class PhoneBookListCell: UITableViewCell {
     
@@ -26,6 +27,21 @@ class PhoneBookListCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // ViewController에서 데이터를 받아 UI를 업데이트하는 메서드
+    func configure(with phoneBook: PhoneBook) {
+            nameLabel.text = phoneBook.name
+            phoneNumberLabel.text = phoneBook.phoneNumber
+            
+            if let imageURL = phoneBook.profileImage, let url = URL(string: imageURL) {
+                URLSession.shared.dataTask(with: url) { data, _, error in
+                    guard let data = data, error == nil, let image = UIImage(data: data) else { return }
+                    DispatchQueue.main.async {
+                        self.photoImageView.image = image
+                    }
+                }.resume()
+            }
+        }
+    
     func configureUI() {
         
         [photoImageView, nameLabel, phoneNumberLabel].forEach { contentView.addSubview($0) }
@@ -34,19 +50,15 @@ class PhoneBookListCell: UITableViewCell {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         phoneNumberLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        photoImageView.image = UIImage(systemName: "person.circle")
         photoImageView.frame.size = CGSize(width: 50, height: 50)
         photoImageView.layer.borderColor = UIColor.gray.cgColor
         photoImageView.layer.borderWidth = 1
         photoImageView.layer.cornerRadius = 50 / 2
         
-        
-        nameLabel.text = "Name"
         nameLabel.textColor = .black
         nameLabel.font = .systemFont(ofSize: 17, weight: .bold)
         nameLabel.numberOfLines = 0
         
-        phoneNumberLabel.text = "010-5000-5000"
         phoneNumberLabel.font = .systemFont(ofSize: 17)
         phoneNumberLabel.textColor = .black
         phoneNumberLabel.numberOfLines = 0

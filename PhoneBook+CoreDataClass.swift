@@ -15,6 +15,7 @@ public class PhoneBook: NSManagedObject {
     public enum Key {
         static let name = "name"
         static let phoneNumber = "phoneNumber"
+        static let profileImage = "profileImage"
     }
 
 }

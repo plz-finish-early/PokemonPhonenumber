@@ -40,8 +40,9 @@ class ViewController: UIViewController {
             
             for phoneBook in phoneBooks as [NSManagedObject] {
                 if let name = phoneBook.value(forKey: PhoneBook.Key.name) as? String,
-                   let phoneNumber = phoneBook.value(forKey: PhoneBook.Key.phoneNumber) as? String {
-                    print("name: \(name), phoneNumber: \(phoneNumber)")
+                   let phoneNumber = phoneBook.value(forKey: PhoneBook.Key.phoneNumber) as? String,
+                   let profileImage = phoneBook.value(forKey: PhoneBook.Key.profileImage) as? String {
+                   // print("name: \(name), phoneNumber: \(phoneNumber)")
                 }
             }
         } catch {
