@@ -89,6 +89,8 @@ class ViewController: UIViewController {
     private func fetchContacts() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let request: NSFetchRequest<CDContactEntity> = CDContactEntity.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        request.sortDescriptors = [sortDescriptor]
         
         do {
             contactList = try context.fetch(request)
