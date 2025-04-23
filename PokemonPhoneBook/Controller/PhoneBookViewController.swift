@@ -124,6 +124,10 @@ class PhoneBookViewController: UIViewController {
     private func didApplyButtonTapped() {
         print("적용 버튼이 탭 되었습니다.")
         
+        // 예외처리: 프로필 업데이트 시, 이미지를 변경하지 않으면 이미지가 비는 현상 수정
+        if profileImageUrl == nil {
+            profileImageUrl = PhoneBookImageUrl
+        }
 //        guard let name = nameTextField.text,
 //              let phone = phoneNumTextField.text else {
 //            print("이름이나 전화번호가 비어있음")
