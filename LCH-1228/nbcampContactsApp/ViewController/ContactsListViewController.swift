@@ -242,9 +242,7 @@ extension ContactsListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        cell.nameLabel.text = data[indexPath.row].name
-        cell.numberLabel.text = data[indexPath.row].phoneNumber
-        cell.profileImage.image = UIImage(data: data[indexPath.row].profileImage)
+        cell.configureCell(data: data[indexPath.row])
         
         return cell
     }

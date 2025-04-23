@@ -11,7 +11,7 @@ class ContactsListCell: UITableViewCell {
     
     static let identifier = "contactListCell"
     
-    let profileImage: UIImageView = {
+    private let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 40
@@ -24,14 +24,14 @@ class ContactsListCell: UITableViewCell {
         return imageView
     }()
     
-    let nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
         label.font = .systemFont(ofSize: 16)
         return label
     }()
     
-    let numberLabel: UILabel = {
+    private let numberLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
         label.font = .systemFont(ofSize: 16)
@@ -69,5 +69,11 @@ class ContactsListCell: UITableViewCell {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-32)
         }
+    }
+    
+    func configureCell(data: Contact) {
+        nameLabel.text = data.name
+        numberLabel.text = data.phoneNumber
+        profileImage.image = UIImage(data: data.profileImage)
     }
 }
