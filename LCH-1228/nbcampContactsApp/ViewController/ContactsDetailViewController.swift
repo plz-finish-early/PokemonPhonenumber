@@ -173,11 +173,11 @@ private extension ContactsDetailViewController {
     @objc private func addButtonTapped() {
         print("addButtonTapped")
         
-        guard let name = nameTextField.text, nameTextField.text != nil else {
+        guard let name = nameTextField.text, !name.isEmpty else {
             print("이름 비어서 저장 못함")
             return
         }
-        guard let number = numberTextField.text, numberTextField.text != nil else {
+        guard let number = numberTextField.text, !number.isEmpty else {
             print("번호 비어서 저장 못함")
             return
         }
@@ -203,11 +203,11 @@ private extension ContactsDetailViewController {
 
         let currentData = data[indexPath.row]
         
-        guard let name = nameTextField.text, nameTextField.text != nil else {
+        guard let name = nameTextField.text, !name.isEmpty else {
             print("이름 비어서 저장 못함")
             return
         }
-        guard let number = numberTextField.text, numberTextField.text != nil else {
+        guard let number = numberTextField.text, !number.isEmpty else {
             print("번호 비어서 저장 못함")
             return
         }
