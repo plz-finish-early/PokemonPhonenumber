@@ -9,7 +9,12 @@ import UIKit
 import CoreData
 
 class PhoneBookViewController: UIViewController {
-    public var contactName: String? // title 변경에 사용할 변수
+    public var PhoneBookPhoneNumber: String?
+    public var PhoneBookImageUrl: String?
+    
+    public var isUpdate: Bool = false // 적용 버튼 탭 시, 추가를 할 것인지 업데이트를 할 것인지 정하는 변수
+    
+    public var PhoneBookName: String? // title 변경에 사용할 변수
     
     private var profileImageUrl: String? // imageUrlString 저장할 프로퍼티 추가
 
@@ -58,7 +63,7 @@ class PhoneBookViewController: UIViewController {
         self.view.backgroundColor = .white
         
         // Title 분기 처리
-        if let contactName = contactName {
+        if let contactName = PhoneBookName {
             self.navigationItem.title = contactName
         } else {
             self.navigationItem.title = "연락처 추가"
@@ -119,11 +124,31 @@ class PhoneBookViewController: UIViewController {
     private func didApplyButtonTapped() {
         print("적용 버튼이 탭 되었습니다.")
         
-        CoreDataManager.shared.createData(
-            imageUrl: profileImageUrl,
-            name: nameTextField.text ?? "",
-            phoneNumber: phoneNumTextField.text ?? "")
+//        guard let name = nameTextField.text,
+//              let phone = phoneNumTextField.text else {
+//            print("이름이나 전화번호가 비어있음")
+//            return
+//        }
+//        guard let currentImageUrl = PhoneBookImageUrl,
+//              let currentName = PhoneBookName,
+//              let currentPhoneNumber = PhoneBookPhoneNumber else { return }
         
+        if isUpdate {
+            CoreDataManager.shared.updateData(
+                currentImageUrl: PhoneBookImageUrl ?? "",
+                updateImageUrl: profileImageUrl ?? "",
+                currentName: PhoneBookName ?? "",
+                updateName: nameTextField.text ?? "",
+                currentPhoneNumber: PhoneBookPhoneNumber ?? "",
+                updatePhoneNumber: phoneNumTextField.text ?? ""
+            )
+        } else {
+            CoreDataManager.shared.createData(
+                imageUrl: profileImageUrl,
+                name: nameTextField.text ?? "",
+                phoneNumber: phoneNumTextField.text ?? ""
+            )
+        }
         self.navigationController?.popViewController(animated: true) // 전 화면으로 돌아가기
         
     }

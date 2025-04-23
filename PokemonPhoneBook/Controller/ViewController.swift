@@ -137,14 +137,19 @@ extension ViewController: UITableViewDelegate {
             pv.nameTextField.text = name
             pv.phoneNumTextField.text = phoneNumber
             
+            pv.PhoneBookName = name
+            
+            pv.PhoneBookPhoneNumber = phoneNumber
+            pv.PhoneBookImageUrl = imageUrl
+            
+            pv.isUpdate = true
+            
             self.navigationController?.pushViewController(pv, animated: true)
             return
         }
         
         // URLSession으로 비동기 이미지 로드
         URLSession.shared.dataTask(with: url) { data, response, error in
-            //guard let self = self else { return }
-            
             if let data = data, let image = UIImage(data: data) {
                 DispatchQueue.main.async {
                     pv.profileImageView.image = image
@@ -158,7 +163,12 @@ extension ViewController: UITableViewDelegate {
         
         pv.nameTextField.text = name
         pv.phoneNumTextField.text = phoneNumber
-        pv.contactName = name
+        pv.PhoneBookName = name
+        
+        pv.PhoneBookPhoneNumber = phoneNumber
+        pv.PhoneBookImageUrl = imageUrl
+        
+        pv.isUpdate = true
         
         self.navigationController?.pushViewController(pv, animated: true)
     }
