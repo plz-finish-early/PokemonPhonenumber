@@ -6,6 +6,7 @@
 3. [Preview](#Preview)
 4. [개발기간](#개발기간)
 5. [기술스택](#기술스택)
+6. [프로젝트 파일 구조](#프로젝트-파일-구조)
 
     
 ## 👨‍🏫 프로젝트 소개
@@ -48,3 +49,17 @@
 ### ✔️ API 연동
 - URLsession
 
+## 🗂️ 프로젝트 파일 구조
+```
+📁 PokemonPhonebook
+├── 📁 PokemonPhonebook
+│   ├── AppDelegate.swift                 
+│   ├── Assets.xcassets                 
+│   ├── CustomCell.swift                  // 연락처 셀 UI
+│   ├── Info.plist                       
+│   ├── LaunchScreen.storyboard          
+│   ├── PhoneBookViewController.swift    // 연락처 추가 화면
+│   ├── PokemonModel.swift               // 포켓몬 API 모델 정의
+│   ├── PokemonPhonebook.xcdatamodeld    // CoreData 모델
+│   ├── ViewController.swift             // 연락처 리스트 메인 화면
+```
