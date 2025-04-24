@@ -43,7 +43,7 @@ class ContactsDetailViewController: UIViewController {
     
     private lazy var getImageButton: UIButton = {
         let button = UIButton()
-        button.setTitle("랜덤 가챠 시작!!", for: .normal)
+        button.setTitle("랜덤 이미지 생성", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 12)
         button.addTarget(self, action: #selector(randomButtonTapped), for: .touchUpInside)
