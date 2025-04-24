@@ -5,6 +5,7 @@
 //  Created by Chanho Lee on 4/16/25.
 //
 
+//랜덤 이미지 표시 기능 구현시 디코딩을 위한 구조체
 struct RandomResult: Decodable {
     let species: SpeciesObject
     let sprites: SpritesObject
@@ -19,7 +20,8 @@ struct SpritesObject: Decodable {
     let other : OtherObject
 }
 
-struct OtherObject: Decodable {    let officialArtwork: OfficialArtworkObject
+struct OtherObject: Decodable {
+    let officialArtwork: OfficialArtworkObject
     
     private enum CodingKeys: String, CodingKey {
         case officialArtwork = "official-artwork"

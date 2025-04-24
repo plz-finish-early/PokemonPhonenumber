@@ -7,12 +7,16 @@
 import UIKit
 import CoreData
 
+//CoreData 입출력을 관리하는 CoreDataManager 정의
 class CoreDataManager {
+    
+    //프로젝트 내에서 동일한 인스턴스 사용을 위해 싱글턴 패턴 사용
     static let shared: CoreDataManager = CoreDataManager()
     
     private let appDelegate = UIApplication.shared.delegate as? AppDelegate
     private lazy var container = appDelegate?.persistentContainer
     
+    //데이터 생성 메서드
     func createData(contact: Contact) {
         guard let container = self.container else { return }
         guard let entity = NSEntityDescription.entity(forEntityName: PhoneBook.entityName, in: container.viewContext) else {
@@ -22,7 +26,7 @@ class CoreDataManager {
         
         let newPhoneBook = NSManagedObject(entity: entity, insertInto: container.viewContext)
         
-        newPhoneBook.setValue(UUID(), forKey: PhoneBook.Key.uuid)
+        newPhoneBook.setValue(UUID(), forKey: PhoneBook.Key.uuid) // UUID는 외부로부터 받지 않고 데이터 저장시 생성
         newPhoneBook.setValue(contact.name, forKey: PhoneBook.Key.name)
         newPhoneBook.setValue(contact.phoneNumber, forKey: PhoneBook.Key.phoneNumber)
         newPhoneBook.setValue(contact.profileImage, forKey: PhoneBook.Key.profileImage)
@@ -35,6 +39,7 @@ class CoreDataManager {
         }
     }
     
+    //디버깅을 위해 CoreData를 print하는 메서드
     func readAllData() {
         guard let container = self.container else { return }
         do {
@@ -69,6 +74,7 @@ class CoreDataManager {
         }
     }
     
+    //모든 데이터를 반환하는 메서드
     func getAllData() -> [Contact] {
         guard let container = self.container else { return [] }
         var allData: [Contact] = []
@@ -106,9 +112,12 @@ class CoreDataManager {
         }
     }
     
+    //데이터 수정을 위한 메서드
     func updateData(contact: Contact) {
         guard let container = self.container else { return }
         let fetchRequest = PhoneBook.fetchRequest()
+        
+        //데이터 수정시 중복을 피하기위해 uuid를 기준으로 데이터 업데이트
         fetchRequest.predicate = NSPredicate(format: "uuid == %@", contact.uuid.uuidString)
         
         do {
@@ -129,9 +138,12 @@ class CoreDataManager {
         }
     }
     
+    //데이터 삭제를 위한 메서드
     func deleteData(contact: Contact) {
         guard let container = self.container else { return }
         let fetchRequest = PhoneBook.fetchRequest()
+        
+        //데이터 삭제시 지정한 데이터만 삭제하기위해 uui를 기준으로 삭제
         fetchRequest.predicate = NSPredicate(format: "uuid == %@", contact.uuid.uuidString)
         
         do {
