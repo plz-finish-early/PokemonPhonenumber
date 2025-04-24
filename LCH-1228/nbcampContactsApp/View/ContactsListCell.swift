@@ -7,6 +7,7 @@
 import UIKit
 import SnapKit
 
+// 테이블 뷰 커스텀 셀 클래스 정의
 class ContactsListCell: UITableViewCell {
     
     static let identifier = "contactListCell"

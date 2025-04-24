@@ -7,6 +7,7 @@
 
 import Foundation
 
+//CoreData 입출력 데이터 모델
 struct Contact {
     let uuid: UUID
     let name: String

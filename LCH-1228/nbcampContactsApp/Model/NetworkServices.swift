@@ -9,6 +9,7 @@ import Alamofire
 
 class NetworkServices {
     
+    //랜덤한 데이터를 가져오는 메서드
     func fetchRandomData(completion: @escaping (Result<RandomResult, Error>) -> Void) {
         let ramdomNumber = Int.random(in: 1...1025)
         var urlComponent = URLComponents(string: "https://pokeapi.co")
@@ -30,6 +31,7 @@ class NetworkServices {
         }
     }
     
+    //이름을 기준으로 데이터를 가져오는 메서드
     func fetchDataByName(name: String, completion: @escaping (Result<RandomResult, Error>) -> Void) {
         var urlComponent = URLComponents(string: "https://pokeapi.co")
         
@@ -50,6 +52,7 @@ class NetworkServices {
         }
     }
     
+    //진화 기능을 위해서 데이터를 가져오는 메서드
     func fetchEvolutionData(name: String, completion: @escaping (Result<EvolutionResult, Error>) -> Void) {
         var urlComponent = URLComponents(string: "https://pokeapi.co")
         
@@ -88,4 +91,3 @@ class NetworkServices {
         }
     }
 }
-

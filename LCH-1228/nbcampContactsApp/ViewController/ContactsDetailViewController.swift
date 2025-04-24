@@ -12,10 +12,12 @@ class ContactsDetailViewController: UIViewController {
     
     private var data: [Contact] = []
     
+    //CoreDataManager에서 createData 호출시 API로 전달받은 포켓몬 이름을 저장할 변수
     private var imageName = ""
     
+    //ContactsListViewController에서 값을 전달 받는 변수
     var indexPath = IndexPath() {
-        didSet {
+        didSet { //indexPath 변경시 메이터 이름 오름차순 정렬 실행
             data = CoreDataManager.shared.getAllData().sorted{
                 $0.name < $1.name
             }
@@ -88,12 +90,16 @@ extension ContactsDetailViewController {
         configureNavigationBar()
     }
     
+    //ContactsListViewController에서 테이블 뷰 셀클릭시 호출되는 메서드
     func configureEditUI() {
         nameTextField.text = data[indexPath.row].name
         numberTextField.text = data[indexPath.row].phoneNumber
         profileImage.image = UIImage(data: data[indexPath.row].profileImage)
         
-        configureNavigationBar(title: data[indexPath.row].name, buttonTitle: "수정", action: #selector(editButtonTapped))
+        //네비게이션 바 설정 메서드 호출
+        configureNavigationBar(title: data[indexPath.row].name,
+                               buttonTitle: "수정",
+                               action: #selector(editButtonTapped))
     }
 }
 
@@ -136,12 +142,16 @@ private extension ContactsDetailViewController {
         }
     }
     
-    private func configureNavigationBar(title: String = "포켓몬 추가",
+    //NavigationBar 설정 메서드
+    private func configureNavigationBar(title: String = "포켓몬 추가", //파라미터 없이 호출 시 기본적으로 저장을 목적으로 설정됨
                                         buttonTitle: String = "저장",
                                         action: Selector = #selector(addButtonTapped)) {
+        //외부에서 ContactsDetailViewController 인스턴스 생성 후 configureNavigationBar 메서드 호출하면
+        //UINavigationBarPush시 ViewDidLoad에 의해 configureNavigationBar()이 다시 실행되어 정상적인 UI표현 안됨
         if !self.isViewLoaded {
             self.loadViewIfNeeded()
         }
+        
         navigationItem.title = title
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: buttonTitle,
                                                             style: .plain,
@@ -149,6 +159,7 @@ private extension ContactsDetailViewController {
                                                             action: action)
     }
     
+    //API로부터 이미지를 받아오는 profileImage에 표시하는 메서드
     private func fetchImageData() {
         let networkServices = NetworkServices()
         networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, Error>) in
@@ -179,6 +190,7 @@ private extension ContactsDetailViewController {
         
     }
     
+    //예외처리 Alert 표시를 위한 메서드
     private func showAlert(_ error: Error) {
         guard let alertError = error as? AlertError else { return }
         let alert = UIAlertController(title: nil, message: alertError.alertMessage, preferredStyle: .alert)

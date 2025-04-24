@@ -5,6 +5,7 @@
 //  Created by Chanho Lee on 4/22/25.
 //
 
+//진화 기능 구현시 디코딩을 위한 구조체
 struct EvolutionResult: Decodable {
     let chain: Chain
 }
@@ -18,17 +19,8 @@ struct Chain: Decodable {
         case species
     }
 }
-/*
-func makeEvolutionArray(from chain: Chain) -> [String] {
-    var result = [chain.species.name]
-    
-    for chain in chain.evolvesTo {
-        result.append(contentsOf: makeEvolutionArray(from: chain))
-    }
-    
-    return result
-}
-*/
+
+//재귀형 JSON 디코딩을 위한 메서드
 func makeEvolutionArray(from chain: Chain) -> [[String]] {
     var result = [[chain.species.name]]
     
@@ -52,9 +44,3 @@ func makeEvolutionArray(from chain: Chain) -> [[String]] {
     
     return result
 }
-
-//struct SpeciesObject: Decodable {
-//    let name: String // 이름이 목적
-//    let url: String
-//}
-
