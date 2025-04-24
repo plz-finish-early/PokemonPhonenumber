@@ -1,0 +1,189 @@
+//
+//  PhoneBookViewController.swift
+//  PokemonPhonebook
+//
+//  Created by 전원식 on 4/23/25.
+//
+
+import UIKit
+import SnapKit
+
+class PhoneBookViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        setupView()
+        configure()
+        
+        title = "연락처 추가"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "적용",
+            style: .plain,
+            target: self,
+            action: #selector(didTapSaveButton)
+            
+        )
+        
+    }
+    
+    
+    private var profileIamgeView: UIImageView = {
+        let profileIamgeView = UIImageView()
+        profileIamgeView.layer.cornerRadius = 100
+        profileIamgeView.layer.borderColor = UIColor.black.cgColor
+        profileIamgeView.layer.borderWidth = 1
+        return profileIamgeView
+    }()
+    
+    private var randomImageAddButton: UIButton = {
+        let randomImageAddButton = UIButton()
+        randomImageAddButton.setTitle("랜덤 이미지 생성", for: .normal)
+        randomImageAddButton.setTitleColor(.black, for: .normal)
+        return randomImageAddButton
+    }()
+    
+    private var nameTextView: UITextView = {
+        let nameTextView = UITextView()
+        nameTextView.backgroundColor = .white
+        nameTextView.layer.borderColor = UIColor.lightGray.cgColor
+        nameTextView.layer.borderWidth = 1
+        nameTextView.layer.cornerRadius = 8
+        return nameTextView
+    }()
+    
+    private var phoneNumTextView: UITextView = {
+        let phoneNumTextView = UITextView()
+        phoneNumTextView.backgroundColor = .white
+        phoneNumTextView.layer.borderColor = UIColor.lightGray.cgColor
+        phoneNumTextView.layer.borderWidth = 1
+        phoneNumTextView.layer.cornerRadius = 8
+        return phoneNumTextView
+    }()
+    
+    
+    
+    private func configure() {
+        
+        profileIamgeView.snp.makeConstraints { make in
+            make.width.height.equalTo(200)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+            make.centerX.equalToSuperview()
+        }
+        
+        randomImageAddButton.snp.makeConstraints { make in
+            make.top.equalTo(profileIamgeView.snp.bottom).offset(30)
+            make.centerX.equalToSuperview()
+            
+        }
+        
+        nameTextView.snp.makeConstraints { make in
+            make.top.equalTo(randomImageAddButton.snp.bottom).offset(30)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(300)
+            make.height.equalTo(40)
+        }
+        
+        phoneNumTextView.snp.makeConstraints { make in
+            make.top.equalTo(nameTextView.snp.bottom).offset(30)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(300)
+            make.height.equalTo(40)
+        }
+    }
+    
+    
+    private func setupView() {
+        
+        view.addSubview(profileIamgeView)
+        view.addSubview(randomImageAddButton)
+        view.addSubview(nameTextView)
+        view.addSubview(phoneNumTextView)
+        
+        randomImageAddButton.addTarget(self, action: #selector(didTapRandomImageButton), for: .touchUpInside)
+        
+    }
+    
+    
+    @objc func didTapSaveButton() {
+        
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let newContact = CDContactEntity(context: context)
+        newContact.name = nameTextView.text
+        newContact.phoneNumber = phoneNumTextView.text
+        
+        if let image = profileIamgeView.image {
+            newContact.imageData = image.jpegData(compressionQuality: 1.0)
+        }
+        
+        do {
+            try context.save()
+            print("저장 성공")
+        } catch {
+            print("저장 실패: \(error.localizedDescription)")
+        }
+        
+        navigationController?.popViewController(animated: true)
+        
+    }
+    
+    
+    
+    @objc private func didTapRandomImageButton() {
+        let randomNum = Int.random(in: 1...300)
+        let urlString = "https://pokeapi.co/api/v2/pokemon/\(randomNum)"
+        
+        guard let url = URL(string: urlString) else {
+            print("URL 생성 실패")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.timeoutInterval = 50
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            
+            if let error = error {
+                print("요청 실패: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("서버 응답 오류")
+                return
+            }
+            
+            guard let data = data else {
+                print("데이터 없음")
+                return
+            }
+            do {
+                let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+                
+                if let imageUrlStr = pokemon.sprites.front_default,
+                   let imageUrl = URL(string: imageUrlStr) {
+                    
+                    DispatchQueue.global().async {
+                        if let imageData = try? Data(contentsOf: imageUrl),
+                           let image = UIImage(data: imageData) {
+                            DispatchQueue.main.async {
+                                self.profileIamgeView.image = image
+                            }
+                        } else {
+                            print("이미지 로딩 실패")
+                        }
+                    }
+                }
+            } catch {
+                print("디코딩 실패: \(error.localizedDescription)")
+            }
+ 
+        }
+        
+        task.resume()
+        
+    }
+}
