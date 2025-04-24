@@ -181,7 +181,7 @@ private extension ContactsListViewController {
 extension ContactsListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 80
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -196,6 +196,7 @@ extension ContactsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let upgrade = UIContextualAction(style: .normal, title: "진화하기") { [weak self] (UIContextualAction, UIView, result: @escaping (Bool) -> Void) in
+            print("진화하기 실행됨")
             guard let self = self else {
                 result(false)
                 return
@@ -205,7 +206,6 @@ extension ContactsListViewController: UITableViewDelegate {
             result(true)
         }
         upgrade.backgroundColor = .systemOrange
-        upgrade.image = UIImage(systemName: "hand.rays")
         
         print("leadinSwipeAction 버튼 표시")
         

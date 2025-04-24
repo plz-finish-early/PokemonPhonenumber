@@ -14,7 +14,7 @@ class ContactsListCell: UITableViewCell {
     private let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 40
+        imageView.layer.cornerRadius = 30
         imageView.layer.borderColor = .init(red: 128/255,
                                             green: 128/255,
                                             blue: 128/255,
@@ -55,7 +55,7 @@ class ContactsListCell: UITableViewCell {
         ].forEach{ contentView.addSubview($0) }
         
         profileImage.snp.makeConstraints {
-            $0.size.equalTo(80)
+            $0.size.equalTo(60)
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().inset(28)
         }
