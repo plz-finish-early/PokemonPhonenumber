@@ -151,26 +151,30 @@ private extension ContactsDetailViewController {
     
     private func fetchImageData() {
         let networkServices = NetworkServices()
-        do {
-            try networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, AFError>) in
-                switch result {
-                case .success(let result):
+        networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, Error>) in
+            switch result {
+            case .success(let result):
+                do {
                     guard let imageURL = URL(string: result.sprites.other.officialArtwork.frontDefault) else {
-                        return
+                        throw CustomNetworkError.failedGettingImageURL
                     }
-                    AF.request(imageURL).response { response in
+                    AF.request(imageURL).response { [weak self] response in
                         if let data = response.data, let image = UIImage(data: data) {
                             self?.profileImage.image = image
                         }
                     }
                     self?.imageName = result.species.name
-                case .failure(let error):
-                    print(error)
+                } catch {
+                    guard let error = error as? CustomNetworkError else { return }
+                    self?.showAlert(error)
                 }
+            case .failure(let error):
+                guard let error = error as? CustomNetworkError else {
+                    print(error)
+                    return
+                }
+                self?.showAlert(error)
             }
-        } catch {
-            guard let error = error as? CustomNetworkError else { return }
-            showAlert(error)
         }
         
     }
@@ -193,7 +197,7 @@ private extension ContactsDetailViewController {
             }
             
             guard let profileImageData = profileImage.image!.pngData() else {
-                throw ContactsDetailViewError.faildCovertingProfileImage
+                throw ContactsDetailViewError.failedCovertingProfileImage
             }
             
             let newContact = Contact(uuid: UUID(),
@@ -214,7 +218,7 @@ private extension ContactsDetailViewController {
     
     @objc private func editButtonTapped() {
         print("editButtonTapped")
-
+        
         let currentData = data[indexPath.row]
         do {
             guard let name = nameTextField.text, !name.isEmpty else {
@@ -225,7 +229,7 @@ private extension ContactsDetailViewController {
             }
             
             guard let profileImageData = profileImage.image!.pngData() else {
-                throw ContactsDetailViewError.faildCovertingProfileImage
+                throw ContactsDetailViewError.failedCovertingProfileImage
             }
             let editedContact = Contact(uuid: currentData.uuid,
                                         name: name,

@@ -68,14 +68,14 @@ private extension ContactsListViewController {
     
     private func getRandomImage(contact: Contact) {
         let networkServices = NetworkServices()
-        do {
-            try networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, AFError>) in
-                switch result {
-                case .success(let result):
+        networkServices.fetchRandomData {  [weak self] (result: Result<RandomResult, Error>) in
+            switch result {
+            case .success(let result):
+                do {
                     guard let imageURL = URL(string: result.sprites.other.officialArtwork.frontDefault) else {
-                        return
+                        throw CustomNetworkError.failedGettingImageURL
                     }
-                    AF.request(imageURL).response { response in
+                    AF.request(imageURL).response { [weak self] response in
                         if let data = response.data, let image = UIImage(data: data)?.pngData() {
                             let newContact = Contact(uuid: contact.uuid,
                                                      name: contact.name,
@@ -86,13 +86,17 @@ private extension ContactsListViewController {
                             self?.reloadData()
                         }
                     }
-                case .failure(let error):
-                    print(error)
+                } catch {
+                    guard let error = error as? CustomNetworkError else { return }
+                    self?.showAlert(error)
                 }
+            case .failure(let error):
+                guard let error = error as? CustomNetworkError else {
+                    print(error)
+                    return
+                }
+                self?.showAlert(error)
             }
-        } catch {
-            guard let error = error as? CustomNetworkError else { return }
-            showAlert(error)
         }
     }
     
@@ -106,22 +110,19 @@ private extension ContactsListViewController {
         
         let networkServices = NetworkServices()
         
-        do {
-            try networkServices.fetchEvolutionData(name: imageName) { response in
-                switch response {
-                case .success(let result):
+        networkServices.fetchEvolutionData(name: imageName) { [weak self] response in
+            switch response {
+            case .success(let result):
+                do {
                     let evolutionStepArray = makeEvolutionArray(from: result.chain)
                     guard evolutionStepArray.count != 1 else {
-                        print("진화형태가 1개 입니다.")
-                        return
+                        throw EvolutionError.NoEvolutionChain
                     }
                     guard let index = evolutionStepArray.firstIndex(of: [imageName]) else {
-                        print("index 생성 실패")
-                        return
+                        throw EvolutionError.failedGeneratingIndex
                     }
                     guard evolutionStepArray.count - 1 != index else {
-                        print("다음 진화형태가 없습니다.")
-                        return
+                        throw EvolutionError.currentChainIsLast
                     }
                     
                     var evolvedName: String?
@@ -132,37 +133,48 @@ private extension ContactsListViewController {
                         print("이름 추출 실패")
                         return
                     }
-                    networkServices.fetchDataByName(name: evolvedName) { response in
+                    networkServices.fetchDataByName(name: evolvedName) { [weak self] response in
                         
                         switch response {
                         case .success(let callImageresult):
-                            
-                            guard let imageURL = URL(string: callImageresult.sprites.other.officialArtwork.frontDefault) else {
-                                return
-                            }
-                            AF.request(imageURL).response { response in
-                                if let data = response.data, let evolvedimage = UIImage(data: data)?.pngData() {
-                                    let newContact = Contact(uuid: contact.uuid,
-                                                             name: contact.name,
-                                                             phoneNumber: contact.phoneNumber,
-                                                             profileImage: evolvedimage,
-                                                             imageName: evolvedName)
-                                    CoreDataManager.shared.updateData(contact: newContact)
-                                    self.reloadData()
+                            do {
+                                guard let imageURL = URL(string: callImageresult.sprites.other.officialArtwork.frontDefault) else {
+                                    throw CustomNetworkError.failedGettingImageURL
                                 }
+                                AF.request(imageURL).response { [weak self] response in
+                                    if let data = response.data, let evolvedimage = UIImage(data: data)?.pngData() {
+                                        let newContact = Contact(uuid: contact.uuid,
+                                                                 name: contact.name,
+                                                                 phoneNumber: contact.phoneNumber,
+                                                                 profileImage: evolvedimage,
+                                                                 imageName: evolvedName)
+                                        CoreDataManager.shared.updateData(contact: newContact)
+                                        self?.reloadData()
+                                    }
+                                }
+                            } catch {
+                                guard let error = error as? CustomNetworkError else { return }
+                                self?.showAlert(error)
                             }
                         case .failure(let error):
-                            print(error)
+                            guard let error = error as? EvolutionError else {
+                                print(error)
+                                return
+                            }
+                            self?.showAlert(error)
                         }
                     }
-                    
-                case .failure(let error):
-                    print(error)
+                } catch {
+                    guard let error = error as? EvolutionError else { return }
+                    self?.showAlert(error)
                 }
+            case .failure(let error):
+                guard let error = error as? EvolutionError else {
+                    print(error)
+                    return
+                }
+                self?.showAlert(error)
             }
-        } catch {
-            guard let error = error as? CustomNetworkError else { return }
-            showAlert(error)
         }
     }
     

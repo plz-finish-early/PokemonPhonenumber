@@ -9,53 +9,81 @@ import Alamofire
 
 class NetworkServices {
     
-    func fetchRandomData(completion: @escaping (Result<RandomResult, AFError>) -> Void) throws {
+    func fetchRandomData(completion: @escaping (Result<RandomResult, Error>) -> Void) {
         let ramdomNumber = Int.random(in: 1...1025)
         var urlComponent = URLComponents(string: "https://pokeapi.co")
         
         urlComponent?.path = "/api/v2/pokemon/\(ramdomNumber)"
         
         guard let url = urlComponent?.url else {
-            throw CustomNetworkError.invalidURL
-        }
-        
-        AF.request(url).responseDecodable(of: RandomResult.self) { response in
-            completion(response.result)
-        }
-    }
-    
-    func fetchDataByName(name: String, completion: @escaping (Result<RandomResult, AFError>) -> Void) {
-        var urlComponent = URLComponents(string: "https://pokeapi.co")
-        
-        urlComponent?.path = "/api/v2/pokemon/\(name)"
-        
-        guard let url = urlComponent?.url else {
-            print("url없음")
+            completion(.failure(CustomNetworkError.failedGeratingRandomURL))
             return
         }
+        
         AF.request(url).responseDecodable(of: RandomResult.self) { response in
-            completion(response.result)
+            switch response.result {
+            case .success(let result):
+                completion(.success(result))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
     
-    func fetchEvolutionData(name: String, completion: @escaping (Result<EvolutionResult, AFError>) -> Void) throws {
+    func fetchDataByName(name: String, completion: @escaping (Result<RandomResult, Error>) -> Void) {
         var urlComponent = URLComponents(string: "https://pokeapi.co")
         
         urlComponent?.path = "/api/v2/pokemon/\(name)"
         
         guard let url = urlComponent?.url else {
-            throw CustomNetworkError.invalidURL
+            completion(.failure(CustomNetworkError.invalidURL))
+            return
+        }
+        
+        AF.request(url).responseDecodable(of: RandomResult.self) { response in
+            switch response.result {
+            case .success(let result):
+                completion(.success(result))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchEvolutionData(name: String, completion: @escaping (Result<EvolutionResult, Error>) -> Void) {
+        var urlComponent = URLComponents(string: "https://pokeapi.co")
+        
+        urlComponent?.path = "/api/v2/pokemon/\(name)"
+        
+        guard let url = urlComponent?.url else {
+            completion(.failure(CustomNetworkError.invalidURL))
+            return
         }
         
         AF.request(url).responseDecodable(of: RandomResult.self) { response in
             guard let value = response.value?.species.url else { return }
             guard let url = URL(string: value) else { return }
-            AF.request(url).responseDecodable(of: SpeciesResult.self) { response in
-                guard let value = response.value?.evolutionChain.url else { return }
-                guard let url = URL(string: value) else { return }
-                AF.request(url).responseDecodable(of: EvolutionResult.self) { response in
-                    completion(response.result)
+            switch response.result {
+            case .success(_):
+                AF.request(url).responseDecodable(of: SpeciesResult.self) { response in
+                    guard let value = response.value?.evolutionChain.url else { return }
+                    guard let url = URL(string: value) else { return }
+                    switch response.result {
+                    case .success(_):
+                        AF.request(url).responseDecodable(of: EvolutionResult.self) { response in
+                            switch response.result {
+                            case .success(let result):
+                                completion(.success(result))
+                            case .failure(let error):
+                                completion(.failure(error))
+                            }
+                        }
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }
