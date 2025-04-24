@@ -8,10 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		9B02AEC12DAF2A4D006F8802 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9B02AEC02DAF2A4D006F8802 /* SnapKit */; };
+		9B2E40DE2DB79BB500DD54CD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9B2E40DD2DB79BB500DD54CD /* Alamofire */; };
+		9B9EAD942DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9EAD932DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift */; };
+		9B9EAD952DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9EAD922DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9B818C6E2DAF29D100BDF9AC /* nbcampContactsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nbcampContactsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B9EAD922DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataClass.swift"; sourceTree = "<group>"; };
+		9B9EAD932DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneBook+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -41,6 +46,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B02AEC12DAF2A4D006F8802 /* SnapKit in Frameworks */,
+				9B2E40DE2DB79BB500DD54CD /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +56,8 @@
 		9B818C652DAF29D000BDF9AC = {
 			isa = PBXGroup;
 			children = (
+				9B9EAD922DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift */,
+				9B9EAD932DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift */,
 				9B818C702DAF29D100BDF9AC /* nbcampContactsApp */,
 				9B818C6F2DAF29D100BDF9AC /* Products */,
 			);
@@ -84,6 +92,7 @@
 			name = nbcampContactsApp;
 			packageProductDependencies = (
 				9B02AEC02DAF2A4D006F8802 /* SnapKit */,
+				9B2E40DD2DB79BB500DD54CD /* Alamofire */,
 			);
 			productName = nbcampContactsApp;
 			productReference = 9B818C6E2DAF29D100BDF9AC /* nbcampContactsApp.app */;
@@ -115,6 +124,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9B02AEBF2DAF2A4D006F8802 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				9B2E40DC2DB79BB500DD54CD /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9B818C6F2DAF29D100BDF9AC /* Products */;
@@ -141,6 +151,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B9EAD942DB0B07B006748B2 /* PhoneBook+CoreDataProperties.swift in Sources */,
+				9B9EAD952DB0B07B006748B2 /* PhoneBook+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,12 +166,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2325H396BR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = nbcampContactsApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -180,12 +194,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2325H396BR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = nbcampContactsApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -350,6 +366,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		9B2E40DC2DB79BB500DD54CD /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -357,6 +381,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9B02AEBF2DAF2A4D006F8802 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		9B2E40DD2DB79BB500DD54CD /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9B2E40DC2DB79BB500DD54CD /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

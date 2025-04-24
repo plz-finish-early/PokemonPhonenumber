@@ -37,20 +37,20 @@ nbcampContactsApp는 Swift 학습을 목적으로 작성된 iOS용 연락처 애
 ### 파일별 역활
 
 #### View
-- `ContactsListCell.swift` : UITableView 커스텀 셀
+`ContactsListCell.swift` : UITableView 커스텀 셀
 
 #### ViewController
-- `ContactsDetailViewController.swift` : 연락처 저장 및 수정 UI 표시 및 연산
-- `ContactsListViewController.swift` : 연락처 메인 UI 표시 및 연산
+`ContactsDetailViewController.swift` : 연락처 저장 및 수정 UI 표시 및 연산
+`ContactsListViewController.swift` : 연락처 메인 UI 표시 및 연산
 
 #### Model
-- `AlertError.swift` : 사용자 정의 에러 타입 정의
-- `Contact.swift` : CoreData 입출력 데이터 모델
-- `CoreDataManager.swift` : CoreData 입출력 관리
-- `EvolutionResult.swift`: JSON 디코딩용 구조체, 메서드 정의
-- `NetworkServices.swift`: JSON 디코딩용 구조체 정의
-- `RandomResult.swift`: JSON 디코딩용 구조체 정의
-- `SpeciesResult.swift`: JSON 디코딩용 구조체 정의
+`AlertError.swift` : 사용자 정의 에러 타입 정의
+`Contact.swift` : CoreData 입출력 데이터 모델
+`CoreDataManager.swift` : CoreData 입출력 관리
+`EvolutionResult.swift`: JSON 디코딩용 구조체, 메서드 정의
+`NetworkServices.swift`: JSON 디코딩용 구조체 정의
+`RandomResult.swift`: JSON 디코딩용 구조체 정의
+`SpeciesResult.swift`: JSON 디코딩용 구조체 정의
 
 ### 프로젝트 구조
 ```
