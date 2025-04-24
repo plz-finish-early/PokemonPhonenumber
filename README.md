@@ -46,5 +46,5 @@
 - Coredata
 
 ### ✔️ API 연동
--URLsession
+- URLsession
 
